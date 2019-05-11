@@ -1,24 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, SyntheticEvent} from 'react';
 import './App.css';
+
+type FileInfo = {
+  personalToken:string,
+  fileURL:string
+};
+
+type Callback = (fileInfo:FileInfo) => void;
+
+type FormProps = {
+  callback: Callback
+};
+
+
+function Form(props:FormProps) {
+  const [personalToken, setPersonalToken] = useState("");
+  const [fileURL, setFileURL] = useState("");
+
+  function handleSubmit(e:SyntheticEvent) {
+    e.preventDefault();
+    props.callback({personalToken, fileURL})
+  }
+
+  return <form onSubmit={handleSubmit}>
+    <label>Figma Personal Token
+      <input value={personalToken} onChange={e => setPersonalToken(e.target.value)} />
+    </label>
+    <label>Figma File URL
+      <input value={fileURL} onChange={e => setFileURL(e.target.value)} />
+    </label>
+    <button type="submit">Analyse file</button>
+  </form>
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Form callback={(fileInfo:FileInfo) => console.log(fileInfo)} />
     </div>
   );
 }
