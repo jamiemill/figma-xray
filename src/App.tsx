@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
 import Form, {ApiInfo} from "./Form";
 import Report from "./Report";    
 import * as Figma from "figma-js";
