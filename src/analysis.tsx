@@ -1,4 +1,4 @@
-import { FileResponse, Node, FrameBase, Component, Instance, Comment } from "figma-js";
+import { FileResponse, Node, Component, Instance } from "figma-js";
 
 // export function getCommentFrame(comment, data) {
 //     const rootComment = isReply(comment) ?
@@ -19,24 +19,24 @@ import { FileResponse, Node, FrameBase, Component, Instance, Comment } from "fig
 //     return comment.client_meta === null;
 // }
 
-function findChildById(node:Node, id:string): Node | false {
-    // base case
-    if (node.id === id) {
-        return node;
-    }
-    // error case
-    if (!("children" in node)) {
-        return false;
-    }
-    // recursion
-    for (let i = 0; i < node.children.length; i += 1) {
-        let result = findChildById(node.children[i], id);
-        if (result !== false) {
-            return result;
-        }
-    }
-    return false;
-}
+// function findChildById(node:Node, id:string): Node | false {
+//     // base case
+//     if (node.id === id) {
+//         return node;
+//     }
+//     // error case
+//     if (!("children" in node)) {
+//         return false;
+//     }
+//     // recursion
+//     for (let i = 0; i < node.children.length; i += 1) {
+//         let result = findChildById(node.children[i], id);
+//         if (result !== false) {
+//             return result;
+//         }
+//     }
+//     return false;
+// }
 
 // Note this will not descend inside Instances to look for nested instances.
 // But it will find instances inside a component, so long as they themselves are not inside other instances.
@@ -57,7 +57,7 @@ function findInstancesOfComponent(node:Node, componentId:string) {
     return findAllInstances(node).filter(_ => _.componentId === componentId);
 }
 
-function getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Array<string>|false {
+function getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Path {
     const name = node.name;
     // base case
     if (node.id === id) {
@@ -100,10 +100,12 @@ function getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Arra
 // Another way of doing the above - iterate through components and find all instances.
 // This onefinds unused components unlike the one above so I favour this.
 
+type Path = Array<string> | false;
+
 type ComponentReport = {
     [componentId:string] : {
         count: Number,
-        path: Array<string> | false,
+        path: Path,
         component: Component
     }
 };
@@ -121,11 +123,21 @@ export function componentReportFromComponents(documentResponse:FileResponse):Com
     return components;
 }
 
+export type ComponentWithStats = {
+    id: string,
+    path: Path,
+    name: string,
+    type: "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT",
+    count: Number,
+    instances: Array<{path: Path}>
+};
+
 export function componentSummary(documentResponse: FileResponse) {
     const components = componentReportFromComponents(documentResponse);
     const componentIds = Object.keys(components);
 
-    const componentsWithStats = componentIds.map(id => ({
+    const componentsWithStats:ComponentWithStats[] = componentIds.map((id:string):ComponentWithStats => ({
+        id: id,
         path: components[id].path,
         name: components[id].component.name,
         type: components[id].component.key ? "LIBRARY" : components[id].path ? "DOCUMENT" : "DELETED_FROM_DOCUMENT",
@@ -148,11 +160,11 @@ function flatten<T>(arr:Array<Array<T>>):Array<T> {
     return arr.reduce((prev,current) => prev.concat(current), []);
 }
 
-function byCreated(a:Comment,b:Comment) {
-    if (a.created_at < b.created_at) return -1;
-    if (a.created_at > b.created_at) return 1;
-    return 0;
-}
+// function byCreated(a:Comment,b:Comment) {
+//     if (a.created_at < b.created_at) return -1;
+//     if (a.created_at > b.created_at) return 1;
+//     return 0;
+// }
 
 // function generateFrameURL(frame:FrameBase, {FILE_ID}) {
 //     return `https://www.figma.com/proto/${FILE_ID}/?node-id=${encodeURIComponent(frame.id)}`;
