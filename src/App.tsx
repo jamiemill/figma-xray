@@ -4,7 +4,7 @@ import Form, {ApiInfo} from "./Form";
 import Report from "./Report";    
 import * as Figma from "figma-js";
 
-export type FileData = object | null;
+export type FileData = {name: string} | null;
 
 function App() {
   const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
@@ -18,9 +18,11 @@ function App() {
   useEffect(() => {
     if(apiInfo) {
       setLoading(true);
+      setFileData(null);
       fetchDocument(apiInfo).then((data) => {
         setFileData(data);
-        setLoading(false)
+      }).finally(() => {
+        setLoading(false);
       });
     }
   }, [apiInfo]);
@@ -35,7 +37,7 @@ function App() {
 }
 
 function fetchDocument(apiInfo: ApiInfo):Promise<FileData> {
-  const p = new Promise((resolve, reject) => {
+  const p = new Promise<FileData>((resolve, reject) => {
     if (!apiInfo) {
       reject();
       return;
@@ -45,7 +47,7 @@ function fetchDocument(apiInfo: ApiInfo):Promise<FileData> {
     })
     client.file(apiInfo.fileURL).then(({ data }) => {
       resolve(data);
-    });
+    }).catch(reject);
   })
   return p;
 }
