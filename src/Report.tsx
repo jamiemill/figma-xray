@@ -1,16 +1,28 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from "react";
+import * as Figma from "figma-js";
+import { FileInfo } from "./Form";
 
-import {FileInfo} from "./Form";
+function Report({ fileInfo }: { fileInfo: FileInfo }) {
+  useEffect(() => {
+    console.log("fetching...", fileInfo);
+    fetchDocument(fileInfo);
+  }, [fileInfo]);
 
-function Report({fileInfo}:{fileInfo:FileInfo}) {
+  return <div>Report Here</div>;
+}
 
-    const fileInfoCacheKey = fileInfo && (fileInfo.fileURL + fileInfo.personalToken);
+function fetchDocument(fileInfo: FileInfo) {
+  if (!fileInfo) {
+    return;
+  }
+  
+  const client = Figma.Client({
+    personalAccessToken: fileInfo.personalToken
+  });
 
-    useEffect(() => {
-        console.log("fetching...", fileInfo);
-    }, [fileInfoCacheKey])
-
-    return <div>Report Here</div>;
+  client.file(fileInfo.fileURL).then(({ data }) => {
+    console.log(data);
+  });
 }
 
 export default Report;
