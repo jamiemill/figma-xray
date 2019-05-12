@@ -35,10 +35,10 @@ export type ApiInfo = {
   fileURL:string
 } | null;
 
-type Callback = (apiInfo:ApiInfo) => void;
+type OnSubmit = (apiInfo:ApiInfo) => void;
 
 type FormProps = {
-  callback: Callback
+  onSubmit: OnSubmit
 };
 
 function Form(props:FormProps) {
@@ -47,7 +47,7 @@ function Form(props:FormProps) {
 
   function handleSubmit(e:SyntheticEvent) {
     e.preventDefault();
-    props.callback({personalToken, fileURL})
+    props.onSubmit({personalToken, fileURL})
   }
 
   return <FormContainer>

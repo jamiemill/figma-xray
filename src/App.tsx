@@ -15,7 +15,7 @@ function App() {
   const [fileData, setFileData] = useState<FileData>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  function handleFileInfoChange(apiInfo:ApiInfo) {
+  function handleApiInfoChange(apiInfo:ApiInfo) {
     setApiInfo(apiInfo);
   }
 
@@ -33,7 +33,7 @@ function App() {
 
   return (
     <Container>
-      <Form callback={handleFileInfoChange} />
+      <Form onSubmit={handleApiInfoChange} />
       {loading ? "Loading..." : null}
       {fileData ? <Report fileData={fileData} /> : null}
     </Container>
