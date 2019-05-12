@@ -13,43 +13,56 @@ export type FileData = Figma.FileResponse | null;
 function App() {
   const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
   const [fileData, setFileData] = useState<FileData>(null);
+  const [error, setError] = useState<string|null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   function handleApiInfoChange(apiInfo:ApiInfo) {
     setApiInfo(apiInfo);
   }
 
+  const fileURL: string | null = apiInfo && apiInfo.fileURL;
+  const personalToken: string | null = apiInfo && apiInfo.personalToken;
+
   useEffect(() => {
-    if(apiInfo) {
+    if(fileURL && personalToken) {
       setLoading(true);
       setFileData(null);
-      fetchDocument(apiInfo).then((data) => {
+      setError(null);
+      fetchDocument(fileURL, personalToken).then((data) => {
         setFileData(data);
-      }).finally(() => {
+        setLoading(false);
+        setError(null);
+      }).catch((e) => {
+        setError(e.message);
         setLoading(false);
       });
+    } else {
+      setLoading(false);
+      setFileData(null);
+      setError("Please specify a token and a file.");
     }
-  }, [apiInfo]);
+  }, [fileURL, personalToken]);
 
   return (
     <Container>
       <Form onSubmit={handleApiInfoChange} />
       {loading ? "Loading..." : null}
+      {error ? error : null}
       {fileData ? <Report fileData={fileData} /> : null}
     </Container>
   );
 }
 
-function fetchDocument(apiInfo: ApiInfo):Promise<FileData> {
+function fetchDocument(fileURL:string, personalToken:string):Promise<FileData> {
   const p = new Promise<FileData>((resolve, reject) => {
-    if (!apiInfo) {
+    if (!fileURL || !personalToken) {
       reject();
       return;
     }
     const client = Figma.Client({
-      personalAccessToken: apiInfo.personalToken
+      personalAccessToken: personalToken
     })
-    client.file(apiInfo.fileURL).then(({ data }) => {
+    client.file(fileURL).then(({ data }) => {
       resolve(data);
     }).catch(reject);
   })
