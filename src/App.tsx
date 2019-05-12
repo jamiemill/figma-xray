@@ -4,13 +4,11 @@ import Report from "./Report";
 import * as Figma from "figma-js";
 import styled from "styled-components";
 
-
 const Container = styled.div`
   padding: 1em;
 `;
 
-
-export type FileData = {name: string} | null;
+export type FileData = Figma.FileResponse | null;
 
 function App() {
   const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
