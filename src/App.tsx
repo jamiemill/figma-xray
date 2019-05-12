@@ -1,6 +1,7 @@
-import React, {useState, SyntheticEvent} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Form, {FileInfo} from "./Form";
+import Report from "./Report";
 
 function App() {
   const [fileInfo, setFileInfo] = useState<FileInfo>(null);
@@ -15,6 +16,7 @@ function App() {
   return (
     <div>
       <Form callback={handleFileInfoChange} />
+      {fileInfo ? <Report fileInfo={fileInfo} /> : null}
     </div>
   );
 }
