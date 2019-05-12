@@ -121,27 +121,27 @@ export function componentReportFromComponents(documentResponse:FileResponse):Com
     return components;
 }
 
-// export function componentSummary(documentResponse: FileResponse) {
-//     const components = componentReportFromComponents(documentResponse);
-//     const componentIds = Object.keys(components);
+export function componentSummary(documentResponse: FileResponse) {
+    const components = componentReportFromComponents(documentResponse);
+    const componentIds = Object.keys(components);
 
-//     const componentsWithStats = componentIds.map(id => ({
-//         path: components[id].path,
-//         name: components[id].name,
-//         type: components[id].key ? "LIBRARY" : components[id].path ? "DOCUMENT" : "DELETED_FROM_DOCUMENT",
-//         count: components[id].count,
-//         instances: findInstancesOfComponent(documentResponse.document, id)
-//             .map(instance => ({path: getPathOfNodeWithId(documentResponse.document, instance.id)}))
-//     }))
-//         .filter(_ => !(_.type === "LIBRARY" && _.count === 0));
-//         // ignore library ones with zero usage for now (probably means they are used inside other library components?)
+    const componentsWithStats = componentIds.map(id => ({
+        path: components[id].path,
+        name: components[id].component.name,
+        type: components[id].component.key ? "LIBRARY" : components[id].path ? "DOCUMENT" : "DELETED_FROM_DOCUMENT",
+        count: components[id].count,
+        instances: findInstancesOfComponent(documentResponse.document, id)
+            .map(instance => ({path: getPathOfNodeWithId(documentResponse.document, instance.id)}))
+    }))
+        .filter(_ => !(_.type === "LIBRARY" && _.count === 0));
+        // ignore library ones with zero usage for now (probably means they are used inside other library components?)
 
-//     return {
-//         LIBRARY: componentsWithStats.filter(_ => _.type === "LIBRARY"),
-//         DOCUMENT: componentsWithStats.filter(_ => _.type === "DOCUMENT"),
-//         DELETED_FROM_DOCUMENT: componentsWithStats.filter(_ => _.type === "DELETED_FROM_DOCUMENT"),
-//     };
-// }
+    return {
+        LIBRARY: componentsWithStats.filter(_ => _.type === "LIBRARY"),
+        DOCUMENT: componentsWithStats.filter(_ => _.type === "DOCUMENT"),
+        DELETED_FROM_DOCUMENT: componentsWithStats.filter(_ => _.type === "DELETED_FROM_DOCUMENT"),
+    };
+}
 
 
 function flatten<T>(arr:Array<Array<T>>):Array<T> {
