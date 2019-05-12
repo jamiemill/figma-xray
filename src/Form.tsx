@@ -1,11 +1,11 @@
 import React, {useState, SyntheticEvent} from 'react';
 
-export type FileInfo = {
+export type ApiInfo = {
   personalToken:string,
   fileURL:string
 } | null;
 
-type Callback = (fileInfo:FileInfo) => void;
+type Callback = (apiInfo:ApiInfo) => void;
 
 type FormProps = {
   callback: Callback

@@ -1,43 +1,49 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
-import Form, {FileInfo} from "./Form";
+import Form, {ApiInfo} from "./Form";
 import Report from "./Report";    
 import * as Figma from "figma-js";
 
 export type FileData = object | null;
 
 function App() {
-  const [fileInfo, setFileInfo] = useState<FileInfo>(null);
+  const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
   const [fileData, setFileData] = useState<FileData>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  function handleFileInfoChange(fileInfo:FileInfo) {
-    setFileInfo(fileInfo);
+  function handleFileInfoChange(apiInfo:ApiInfo) {
+    setApiInfo(apiInfo);
   }
 
   useEffect(() => {
-    if(fileInfo) {
-      fetchDocument(fileInfo).then(setFileData);
+    if(apiInfo) {
+      setLoading(true);
+      fetchDocument(apiInfo).then((data) => {
+        setFileData(data);
+        setLoading(false)
+      });
     }
-  }, [fileInfo]);
+  }, [apiInfo]);
 
   return (
     <div>
       <Form callback={handleFileInfoChange} />
+      {loading ? "Loading..." : null}
       {fileData ? <Report fileData={fileData} /> : null}
     </div>
   );
 }
 
-function fetchDocument(fileInfo: FileInfo):Promise<FileData> {
+function fetchDocument(apiInfo: ApiInfo):Promise<FileData> {
   const p = new Promise((resolve, reject) => {
-    if (!fileInfo) {
+    if (!apiInfo) {
       reject();
       return;
     }
     const client = Figma.Client({
-      personalAccessToken: fileInfo.personalToken
+      personalAccessToken: apiInfo.personalToken
     })
-    client.file(fileInfo.fileURL).then(({ data }) => {
+    client.file(apiInfo.fileURL).then(({ data }) => {
       resolve(data);
     });
   })
