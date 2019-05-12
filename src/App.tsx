@@ -2,6 +2,13 @@ import React, {useState, useEffect} from 'react';
 import Form, {ApiInfo} from "./Form";
 import Report from "./Report";    
 import * as Figma from "figma-js";
+import styled from "styled-components";
+
+
+const Container = styled.div`
+  padding: 1em;
+`;
+
 
 export type FileData = {name: string} | null;
 
@@ -27,11 +34,11 @@ function App() {
   }, [apiInfo]);
 
   return (
-    <div>
+    <Container>
       <Form callback={handleFileInfoChange} />
       {loading ? "Loading..." : null}
       {fileData ? <Report fileData={fileData} /> : null}
-    </div>
+    </Container>
   );
 }
 
