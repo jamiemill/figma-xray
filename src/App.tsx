@@ -1,42 +1,20 @@
 import React, {useState, SyntheticEvent} from 'react';
 import './App.css';
-
-type FileInfo = {
-  personalToken:string,
-  fileURL:string
-};
-
-type Callback = (fileInfo:FileInfo) => void;
-
-type FormProps = {
-  callback: Callback
-};
-
-
-function Form(props:FormProps) {
-  const [personalToken, setPersonalToken] = useState("");
-  const [fileURL, setFileURL] = useState("");
-
-  function handleSubmit(e:SyntheticEvent) {
-    e.preventDefault();
-    props.callback({personalToken, fileURL})
-  }
-
-  return <form onSubmit={handleSubmit}>
-    <label>Figma Personal Token
-      <input value={personalToken} onChange={e => setPersonalToken(e.target.value)} />
-    </label>
-    <label>Figma File URL
-      <input value={fileURL} onChange={e => setFileURL(e.target.value)} />
-    </label>
-    <button type="submit">Analyse file</button>
-  </form>
-}
+import Form, {FileInfo} from "./Form";
 
 function App() {
+  const [fileInfo, setFileInfo] = useState<FileInfo>(null);
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const [fileData, setFileData] = useState(null);
+
+  function handleFileInfoChange(fileInfo:FileInfo) {
+    setFileInfo(fileInfo);
+    console.log(fileInfo);
+  }
+
   return (
     <div>
-      <Form callback={(fileInfo:FileInfo) => console.log(fileInfo)} />
+      <Form callback={handleFileInfoChange} />
     </div>
   );
 }
