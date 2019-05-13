@@ -1,4 +1,4 @@
-import React, {useState, SyntheticEvent} from 'react';
+import React, {useState, SyntheticEvent, useEffect} from 'react';
 import styled from "styled-components";
 
 const FormContainer = styled.div`
@@ -45,9 +45,22 @@ function Form(props:FormProps) {
   const [personalToken, setPersonalToken] = useState("");
   const [fileURL, setFileURL] = useState("");
 
+  useEffect(() => {
+    const savedPersonalToken = window.localStorage.getItem("personalToken") || "";
+    const savedFileURL = window.localStorage.getItem("fileURL") || "";
+    if (savedPersonalToken) {
+      setPersonalToken(savedPersonalToken);
+    }
+    if (savedFileURL) {
+      setFileURL(savedFileURL);
+    }
+  }, []);
+
   function handleSubmit(e:SyntheticEvent) {
     e.preventDefault();
     props.onSubmit({personalToken, fileURL})
+    window.localStorage.setItem("personalToken", personalToken);
+    window.localStorage.setItem("fileURL", fileURL);
   }
 
   return <FormContainer>
