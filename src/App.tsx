@@ -1,14 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import Form, {ApiInfo} from "./Form";
-import Report from "./Report";    
-import * as Figma from "figma-js";
+import Report from "./Report";
 import styled from "styled-components";
+import {fetchDocument, FileData} from "./api";
 
 const Container = styled.div`
   padding: 1em;
 `;
-
-export type FileData = Figma.FileResponse | null;
 
 function App() {
   const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
@@ -51,22 +49,6 @@ function App() {
       {fileData ? <Report fileData={fileData} /> : null}
     </Container>
   );
-}
-
-function fetchDocument(fileURL:string, personalToken:string):Promise<FileData> {
-  const p = new Promise<FileData>((resolve, reject) => {
-    if (!fileURL || !personalToken) {
-      reject();
-      return;
-    }
-    const client = Figma.Client({
-      personalAccessToken: personalToken
-    })
-    client.file(fileURL).then(({ data }) => {
-      resolve(data);
-    }).catch(reject);
-  })
-  return p;
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import React from "react";
-import { FileData } from "./App";
+import { FileData } from "./api";
 
 import {componentSummary, ComponentWithStats} from "./analysis";
 
