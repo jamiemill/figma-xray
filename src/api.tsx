@@ -24,14 +24,14 @@ export function fetchDocument(
   return p;
 }
 
-type Images = {
+export type Images = {
   [key: string]: string;
 };
 
-export function fetchImage(
+export function fetchImages(
   fileURL: string,
   personalToken: string,
-  nodeID: string
+  nodeIDs: Array<string>
 ): Promise<Images> {
   const p = new Promise<Images>((resolve, reject) => {
     if (!fileURL || !personalToken) {
@@ -42,7 +42,7 @@ export function fetchImage(
       personalAccessToken: personalToken
     });
     client
-      .fileImages(fileURL, { ids: [nodeID], scale: 2, format: "jpg" })
+      .fileImages(fileURL, { ids: nodeIDs, scale: 2, format: "jpg" })
       .then(({ data }) => {
         resolve(data.images);
       })
