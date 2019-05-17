@@ -12,7 +12,7 @@ function App() {
   const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
   const [fileData, setFileData] = useState<FileData>(null);
   const [error, setError] = useState<string|null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<"LOADING_DOCUMENT" | "LOADING_IMAGES" | "NONE">("NONE");
   const [imageData, setImageData] = useState<ImageData>(null);
 
   function handleApiInfoChange(apiInfo:ApiInfo) {
@@ -24,29 +24,29 @@ function App() {
 
   useEffect(() => {
     if(fileURL && personalToken) {
-      setLoading(true);
+      setLoading("LOADING_DOCUMENT");
       setFileData(null);
       setImageData(null);
       setError(null);
       fetchDocument(fileURL, personalToken)
       .then((fileData) => {
         setFileData(fileData);
+        setLoading("LOADING_IMAGES");
         const componentIds = fileData ? Object.keys(fileData.components) : [];
         return fetchImages(fileURL, personalToken, componentIds);
       })
       .then(images => {
         setImageData(images);
-        setLoading(false);
+        setLoading("NONE");
       })
       .catch((e) => {
         setError(e.message);
-        setLoading(false);
+        setLoading("NONE");
       });
     } else {
-      setLoading(false);
+      setLoading("NONE");
       setFileData(null);
       setImageData(null);
-      setError("Please specify a token and a file.");
     }
   }, [fileURL, personalToken]);
 
@@ -55,7 +55,7 @@ function App() {
   return (
     <Container>
       <Form onSubmit={handleApiInfoChange} />
-      {loading ? "Loading..." : null}
+      { {"NONE" : null, "LOADING_DOCUMENT": "Loading document...", "LOADING_IMAGES": "Loading images..."}[loading] }
       {error ? error : null}
       {fileData ? <Report fileData={fileData} imageData={imageData} /> : null}
     </Container>
