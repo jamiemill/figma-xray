@@ -71,7 +71,7 @@ const ComponentContainer = styled.div`
   margin-right: 20px;
   padding: 20px;
   border-radius: 3px;
-  background-color: #eee;
+  background-color: #f8f8f8;
 `;
 const ComponentsList = styled.div`
   display: flex;
