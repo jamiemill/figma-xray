@@ -1,6 +1,11 @@
 import * as Figma from "figma-js";
 
 export type FileData = Figma.FileResponse | null;
+export type Images = {
+    [key: string]: string;
+};
+export type ImageData = Images | null;
+  
 
 export function fetchDocument(
   fileURL: string,
@@ -24,9 +29,6 @@ export function fetchDocument(
   return p;
 }
 
-export type Images = {
-  [key: string]: string;
-};
 
 export function fetchImages(
   fileURL: string,
@@ -42,7 +44,7 @@ export function fetchImages(
       personalAccessToken: personalToken
     });
     client
-      .fileImages(fileURL, { ids: nodeIDs, scale: 2, format: "jpg" })
+      .fileImages(fileURL, { ids: nodeIDs, scale: 1, format: "jpg" })
       .then(({ data }) => {
         resolve(data.images);
       })
