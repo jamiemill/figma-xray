@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { FileData, ImageData } from "./api";
 
-import {componentSummary, ComponentSummary, ComponentWithStats} from "./analysis";
+import {componentSummary, ComponentSummary, ComponentWithStats, Path} from "./analysis";
 import styled from "styled-components";
 
 type ReportProps =  {
@@ -52,15 +52,32 @@ function Section({name, subtitle, components, imageData}:SectionProps) {
 }
 
 function Component({component, imageData}: ComponentProps) {
+
+  const [expandInstances, setExpandInstances] = useState<boolean>(false);
+
   return <ComponentContainer>
     <ComponentPath>{component.path && component.path.join(" > ")}</ComponentPath>
     <ComponentName>{component.name}</ComponentName>
     <ComponentImageContainer>
       <img srcSet={imageData ? imageData[component.id]+" 2w" : ""} sizes="1px" src={imageData ? imageData[component.id] : ""} alt="" />
     </ComponentImageContainer>
-    <ComponentCount><Count>{component.count}</Count> instances</ComponentCount>
+    <ComponentCount onClick={() => setExpandInstances(!expandInstances)}><Count>{component.count}</Count> instances</ComponentCount>
+    {expandInstances ? <InstanceList instances={component.instances} /> : null}
   </ComponentContainer>
 }
+
+function InstanceList({instances}:{instances:Array<{path:Path}>}) {
+  return <InstanceListContainer>{
+    instances.map((ins,i) => ins.path && <li>{ins.path.join(" > ")}</li>)
+  }</InstanceListContainer>;
+}
+
+const InstanceListContainer = styled.ul`
+  font-size: 85%;
+  margin: 10px 0 0 0;
+  padding: 0 0 0 10px;
+  list-style-position: inside; 
+`;
 
 function LintErrors({lintErrors}:{lintErrors:Array<any>|null}) {
   return  <SectionContainer>
@@ -130,6 +147,7 @@ const ComponentName = styled.div`
   color: #999;
 `;
 const ComponentCount = styled.div`
+  cursor: pointer;
   font-size: 85%;
 `;
 const Count = styled.span`

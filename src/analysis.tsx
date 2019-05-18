@@ -100,9 +100,9 @@ function getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Path
 // Another way of doing the above - iterate through components and find all instances.
 // This onefinds unused components unlike the one above so I favour this.
 
-type Path = Array<string> | false;
+export type Path = Array<string> | false;
 
-type ComponentReport = {
+export type ComponentReport = {
     [componentId:string] : {
         count: Number,
         path: Path,
