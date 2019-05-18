@@ -8,11 +8,11 @@ export type ImageData = Images | null;
   
 
 export function fetchDocument(
-  fileURL: string,
+  fileID: string,
   personalToken: string
 ): Promise<FileData> {
   const p = new Promise<FileData>((resolve, reject) => {
-    if (!fileURL || !personalToken) {
+    if (!fileID || !personalToken) {
       reject();
       return;
     }
@@ -20,7 +20,7 @@ export function fetchDocument(
       personalAccessToken: personalToken
     });
     client
-      .file(fileURL)
+      .file(fileID)
       .then(({ data }) => {
         resolve(data);
       })
@@ -31,12 +31,12 @@ export function fetchDocument(
 
 
 export function fetchImages(
-  fileURL: string,
+  fileID: string,
   personalToken: string,
   nodeIDs: Array<string>
 ): Promise<Images> {
   const p = new Promise<Images>((resolve, reject) => {
-    if (!fileURL || !personalToken) {
+    if (!fileID || !personalToken) {
       reject();
       return;
     }
@@ -44,7 +44,7 @@ export function fetchImages(
       personalAccessToken: personalToken
     });
     client
-      .fileImages(fileURL, { ids: nodeIDs, scale: 1, format: "png" })
+      .fileImages(fileID, { ids: nodeIDs, scale: 1, format: "png" })
       .then(({ data }) => {
         resolve(data.images);
       })

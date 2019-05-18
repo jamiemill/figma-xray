@@ -32,7 +32,7 @@ const Button = styled.button`
 
 export type ApiInfo = {
   personalToken:string,
-  fileURL:string
+  fileID:string
 } | null;
 
 type OnSubmit = (apiInfo:ApiInfo) => void;
@@ -43,24 +43,24 @@ type FormProps = {
 
 function Form(props:FormProps) {
   const [personalToken, setPersonalToken] = useState("");
-  const [fileURL, setFileURL] = useState("");
+  const [fileID, setFileID] = useState("");
 
   useEffect(() => {
     const savedPersonalToken = window.localStorage.getItem("personalToken") || "";
-    const savedFileURL = window.localStorage.getItem("fileURL") || "";
+    const savedFileID = window.localStorage.getItem("fileID") || "";
     if (savedPersonalToken) {
       setPersonalToken(savedPersonalToken);
     }
-    if (savedFileURL) {
-      setFileURL(savedFileURL);
+    if (savedFileID) {
+      setFileID(savedFileID);
     }
   }, []);
 
   function handleSubmit(e:SyntheticEvent) {
     e.preventDefault();
-    props.onSubmit({personalToken, fileURL})
+    props.onSubmit({personalToken, fileID: fileID})
     window.localStorage.setItem("personalToken", personalToken);
-    window.localStorage.setItem("fileURL", fileURL);
+    window.localStorage.setItem("fileID", fileID);
   }
 
   return <FormContainer>
@@ -70,8 +70,8 @@ function Form(props:FormProps) {
         <Input autoComplete="off" name="personalToken" value={personalToken} onChange={e => setPersonalToken(e.target.value)} />
       </Field>
       <Field>
-        <Label htmlFor="fileURL">Figma File URL</Label>
-        <Input autoComplete="off" name="fileURL" value={fileURL} onChange={e => setFileURL(e.target.value)} />
+        <Label htmlFor="fileID">Figma File ID</Label>
+        <Input autoComplete="off" name="fileID" value={fileID} onChange={e => setFileID(e.target.value)} />
       </Field>
       <Field>
         <Button type="submit">Analyse file</Button>

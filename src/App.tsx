@@ -19,21 +19,21 @@ function App() {
     setApiInfo(apiInfo);
   }
 
-  const fileURL: string | null = apiInfo && apiInfo.fileURL;
+  const fileID: string | null = apiInfo && apiInfo.fileID;
   const personalToken: string | null = apiInfo && apiInfo.personalToken;
 
   useEffect(() => {
-    if(fileURL && personalToken) {
+    if(fileID && personalToken) {
       setLoading("LOADING_DOCUMENT");
       setFileData(null);
       setImageData(null);
       setError(null);
-      fetchDocument(fileURL, personalToken)
+      fetchDocument(fileID, personalToken)
       .then((fileData) => {
         setFileData(fileData);
         setLoading("LOADING_IMAGES");
         const componentIds = fileData ? Object.keys(fileData.components) : [];
-        return fetchImages(fileURL, personalToken, componentIds);
+        return fetchImages(fileID, personalToken, componentIds);
       })
       .then(images => {
         setImageData(images);
@@ -48,7 +48,7 @@ function App() {
       setFileData(null);
       setImageData(null);
     }
-  }, [fileURL, personalToken]);
+  }, [fileID, personalToken]);
 
   console.log(imageData);
 
