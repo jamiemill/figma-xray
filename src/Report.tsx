@@ -12,6 +12,7 @@ type ReportProps =  {
 
 type SectionProps = {
   name: string,
+  subtitle?: string,
   components: Array<ComponentWithStats>,
   imageData: ImageData
 };
@@ -32,15 +33,16 @@ function Report({ fileData, imageData, lintErrors }: ReportProps) {
   return <div>
     <DocumentName><DocumentNameLabel>File:</DocumentNameLabel> {fileData.name}</DocumentName>
     <LintErrors lintErrors={lintErrors} />
-    <Section name="Components from the Library" components={summary.LIBRARY} imageData={imageData} />
-    <Section name="Components in the Document" components={summary.DOCUMENT} imageData={imageData} />
-    <Section name="Deleted Components" components={summary.DELETED_FROM_DOCUMENT} imageData={imageData} />
+    <Section name="Components from the Library" subtitle="These are the components you've used from the team library." components={summary.LIBRARY} imageData={imageData} />
+    <Section name="Components in the Document" subtitle="If they are never used, consider deleting." components={summary.DOCUMENT} imageData={imageData} />
+    <Section name="Deleted Components" subtitle="Undiscoverable components. Consider restoring the master, or replace the instance." components={summary.DELETED_FROM_DOCUMENT} imageData={imageData} />
   </div>;
 }
 
-function Section({name, components, imageData}:SectionProps) {
+function Section({name, subtitle, components, imageData}:SectionProps) {
   return <SectionContainer>
     <SectionName>{name}</SectionName>
+    <SectionSubtitle>{subtitle}</SectionSubtitle>
     <ComponentsList>
       {components.length > 0 ?
         components.map(component => <Component key={component.id} component={component} imageData={imageData} />)
@@ -83,9 +85,15 @@ const DocumentNameLabel = styled.span`
   color: #999;
 `;
 const SectionName = styled.h2`
-  font-weight:500;
+  font-weight:700;
+  margin: 10px 0 10px 0;
+`;
+const SectionSubtitle = styled.p`
+  margin: 10px 0 20px 0;
 `;
 const SectionContainer = styled.section`
+  border-top: 1px solid rgba(0,0,0,0.05);
+  margin-top: 20px;
 `;
 const ComponentContainer = styled.div`
   margin-bottom: 20px;

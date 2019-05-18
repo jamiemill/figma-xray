@@ -2,6 +2,7 @@ import React, {useState, SyntheticEvent, useEffect} from 'react';
 import styled from "styled-components";
 
 const FormContainer = styled.div`
+  margin-bottom: 40px;
 `;
 
 const Input = styled.input`
