@@ -26,25 +26,24 @@ function App() {
 
   useEffect(() => {
     if(fileID && personalToken) {
-      setLoading("LOADING_DOCUMENT");
-      setFileData(null);
-      setImageData(null);
-      setError(null);
-      fetchDocument(fileID, personalToken)
-      .then((fileData) => {
+      const loadEverything = async () => {
+        setLoading("LOADING_DOCUMENT");
+        setFileData(null);
+        setImageData(null);
+        setError(null);
+        const fileData = await fetchDocument(fileID, personalToken);
         setFileData(fileData);
         const lintErrors = lint(fileData);
         setLintErrors(lintErrors);
-        
+
         setLoading("LOADING_IMAGES");
         const componentIds = fileData ? Object.keys(fileData.components) : [];
-        return fetchImages(fileID, personalToken, componentIds);
-      })
-      .then(images => {
+        const images = await fetchImages(fileID, personalToken, componentIds);
         setImageData(images);
+
         setLoading("NONE");
-      })
-      .catch((e) => {
+      }
+      loadEverything().catch((e) => {
         setError(e.message);
         setLoading("NONE");
       });
