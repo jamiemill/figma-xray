@@ -13,7 +13,7 @@ function App() {
   const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
   const [fileData, setFileData] = useState<FileData>(null);
   const [error, setError] = useState<string|null>(null);
-  const [loading, setLoading] = useState<"LOADING_DOCUMENT" | "LOADING_IMAGES" | "NONE">("NONE");
+  const [loading, setLoading] = useState<"LOADING_DOCUMENT" | "LOADING_IMAGES" | "LINTING" | "NONE">("NONE");
   const [imageData, setImageData] = useState<ImageData>(null);
   const [lintErrors, setLintErrors] = useState<any>(null);
 
@@ -33,7 +33,9 @@ function App() {
         setError(null);
         const fileData = await fetchDocument(fileID, personalToken);
         setFileData(fileData);
-        const lintErrors = lint(fileData);
+
+        setLoading("LINTING");
+        const lintErrors = await lint(fileData);
         setLintErrors(lintErrors);
 
         setLoading("LOADING_IMAGES");
@@ -61,7 +63,7 @@ function App() {
   return (
     <Container>
       <Form onSubmit={handleApiInfoChange} />
-      { {"NONE" : null, "LOADING_DOCUMENT": "Loading document...", "LOADING_IMAGES": "Loading images..."}[loading] }
+      { {"NONE" : null, "LOADING_DOCUMENT": "Loading document...", "LOADING_IMAGES": "Loading images...", "LINTING": "Linting..."}[loading] }
       {error ? error : null}
       {fileData ? <Report fileData={fileData} imageData={imageData} lintErrors={lintErrors} /> : null}
     </Container>
