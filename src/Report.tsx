@@ -54,7 +54,7 @@ function Component({component, imageData}: ComponentProps) {
     <ComponentPath>{component.path && component.path.join(" > ")}</ComponentPath>
     <ComponentName>{component.name}</ComponentName>
     <ComponentImageContainer>
-      <img src={imageData ? imageData[component.id] : ""} alt="" />
+      <img srcSet={imageData ? imageData[component.id]+" 2w" : ""} sizes="1px" src={imageData ? imageData[component.id] : ""} alt="" />
     </ComponentImageContainer>
     <ComponentCount><Count>{component.count}</Count> instances</ComponentCount>
   </ComponentContainer>

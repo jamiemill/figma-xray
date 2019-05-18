@@ -44,7 +44,7 @@ export function fetchImages(
       personalAccessToken: personalToken
     });
     client
-      .fileImages(fileID, { ids: nodeIDs, scale: 1, format: "png" })
+      .fileImages(fileID, { ids: nodeIDs, scale: 2, format: "png" })
       .then(({ data }) => {
         resolve(data.images);
       })
