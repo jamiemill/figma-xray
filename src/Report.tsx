@@ -27,7 +27,6 @@ function Report({ fileData, imageData }: ReportProps) {
     return null;
   }
   const summary = componentSummary(fileData);
-  console.log(summary);
 
   return <div>
     <DocumentName>{fileData.name}</DocumentName>
@@ -53,7 +52,7 @@ function Component({component, imageData}: ComponentProps) {
     <ComponentPath>{component.path && component.path.join(" > ")}</ComponentPath>
     <ComponentName>{component.name}</ComponentName>
     <ComponentImageContainer>
-      <img src={imageData ? imageData[component.id] : ""} />
+      <img src={imageData ? imageData[component.id] : ""} alt="" />
     </ComponentImageContainer>
     <ComponentCount><Count>{component.count}</Count> instances</ComponentCount>
   </ComponentContainer>

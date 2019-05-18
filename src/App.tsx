@@ -50,8 +50,6 @@ function App() {
     }
   }, [fileID, personalToken]);
 
-  console.log(imageData);
-
   return (
     <Container>
       <Form onSubmit={handleApiInfoChange} />
