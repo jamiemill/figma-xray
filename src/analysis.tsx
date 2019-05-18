@@ -58,6 +58,11 @@ function findInstancesOfComponent(node:Node, componentId:string) {
 }
 
 function getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Path {
+    const p = _getPathOfNodeWithId(node, id, path);
+    return p ? p.slice(1) : false;
+}
+
+function _getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Path {
     const name = node.name;
     // base case
     if (node.id === id) {
@@ -69,7 +74,7 @@ function getPathOfNodeWithId(node:Node, id:string, path:Array<string> = []):Path
     }
     // recursion
     for (let i = 0; i < node.children.length; i += 1) {
-        let result = getPathOfNodeWithId(node.children[i], id, path.concat(name));
+        let result = _getPathOfNodeWithId(node.children[i], id, path.concat(name));
         if (result !== false) {
             return result;
         }
