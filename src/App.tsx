@@ -3,6 +3,7 @@ import Form, {ApiInfo} from "./Form";
 import Report from "./Report";
 import styled from "styled-components";
 import {fetchDocument, FileData, ImageData, fetchImages} from "./api";
+import lint from "./lint";
 
 const Container = styled.div`
   padding: 1em;
@@ -14,6 +15,7 @@ function App() {
   const [error, setError] = useState<string|null>(null);
   const [loading, setLoading] = useState<"LOADING_DOCUMENT" | "LOADING_IMAGES" | "NONE">("NONE");
   const [imageData, setImageData] = useState<ImageData>(null);
+  const [lintErrors, setLintErrors] = useState<any>(null);
 
   function handleApiInfoChange(apiInfo:ApiInfo) {
     setApiInfo(apiInfo);
@@ -31,6 +33,9 @@ function App() {
       fetchDocument(fileID, personalToken)
       .then((fileData) => {
         setFileData(fileData);
+        const lintErrors = lint(fileData);
+        setLintErrors(lintErrors);
+        
         setLoading("LOADING_IMAGES");
         const componentIds = fileData ? Object.keys(fileData.components) : [];
         return fetchImages(fileID, personalToken, componentIds);
@@ -55,7 +60,7 @@ function App() {
       <Form onSubmit={handleApiInfoChange} />
       { {"NONE" : null, "LOADING_DOCUMENT": "Loading document...", "LOADING_IMAGES": "Loading images..."}[loading] }
       {error ? error : null}
-      {fileData ? <Report fileData={fileData} imageData={imageData} /> : null}
+      {fileData ? <Report fileData={fileData} imageData={imageData} lintErrors={lintErrors} /> : null}
     </Container>
   );
 }

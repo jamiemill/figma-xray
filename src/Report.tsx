@@ -6,7 +6,8 @@ import styled from "styled-components";
 
 type ReportProps =  {
   fileData: FileData,
-  imageData: ImageData
+  imageData: ImageData,
+  lintErrors: any
 };
 
 type SectionProps = {
@@ -22,7 +23,7 @@ type ComponentProps = {
 
 
 
-function Report({ fileData, imageData }: ReportProps) {
+function Report({ fileData, imageData, lintErrors }: ReportProps) {
   if (fileData === null) {
     return null;
   }
@@ -30,6 +31,7 @@ function Report({ fileData, imageData }: ReportProps) {
 
   return <div>
     <DocumentName>{fileData.name}</DocumentName>
+    <LintErrors lintErrors={lintErrors} />
     <Section name="Components from the Library" components={summary.LIBRARY} imageData={imageData} />
     <Section name="Components in the Document" components={summary.DOCUMENT} imageData={imageData} />
     <Section name="Deleted Components" components={summary.DELETED_FROM_DOCUMENT} imageData={imageData} />
@@ -56,6 +58,20 @@ function Component({component, imageData}: ComponentProps) {
     </ComponentImageContainer>
     <ComponentCount><Count>{component.count}</Count> instances</ComponentCount>
   </ComponentContainer>
+}
+
+function LintErrors({lintErrors}:{lintErrors:Array<any>|null}) {
+  return  <SectionContainer>
+    <SectionName>Lint Errors</SectionName>
+    {lintErrors ?
+      <div>{lintErrors.map((e:any,i:number) => <LintError key={i} location={e.location} message={e.message} />)}</div>
+      : <div>None.</div>
+    }
+  </SectionContainer>
+}
+
+function LintError({location, message}: {location:string, message:string}) {
+  return <div>{location} &mdash; {message}</div>
 }
 
 
