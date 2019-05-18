@@ -44,8 +44,12 @@ function App() {
         setLoading("NONE");
       }
       loadEverything().catch((e) => {
-        setError(e.message);
         setLoading("NONE");
+        if (e.request) {
+          setError(e.message);
+        } else {
+          throw e;
+        }
       });
     } else {
       setLoading("NONE");
