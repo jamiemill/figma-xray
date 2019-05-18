@@ -132,7 +132,13 @@ export type ComponentWithStats = {
     instances: Array<{path: Path}>
 };
 
-export function componentSummary(documentResponse: FileResponse) {
+export type ComponentSummary = {
+    LIBRARY: Array<ComponentWithStats>,
+    DOCUMENT: Array<ComponentWithStats>,
+    DELETED_FROM_DOCUMENT: Array<ComponentWithStats>
+};
+
+export function componentSummary(documentResponse: FileResponse):ComponentSummary {
     const components = componentReportFromComponents(documentResponse);
     const componentIds = Object.keys(components);
 

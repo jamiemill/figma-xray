@@ -1,11 +1,12 @@
 import React from "react";
 import { FileData, ImageData } from "./api";
 
-import {componentSummary, ComponentWithStats} from "./analysis";
+import {componentSummary, ComponentSummary, ComponentWithStats} from "./analysis";
 import styled from "styled-components";
 
 type ReportProps =  {
   fileData: FileData,
+  summary: ComponentSummary | null,
   imageData: ImageData,
   lintErrors: any
 };
@@ -24,11 +25,10 @@ type ComponentProps = {
 
 
 
-function Report({ fileData, imageData, lintErrors }: ReportProps) {
-  if (fileData === null) {
+function Report({ fileData, summary, imageData, lintErrors }: ReportProps) {
+  if (fileData === null || summary === null) {
     return null;
   }
-  const summary = componentSummary(fileData);
 
   return <div>
     <DocumentName><DocumentNameLabel>File:</DocumentNameLabel> {fileData.name}</DocumentName>
