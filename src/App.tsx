@@ -34,9 +34,9 @@ function App() {
         const fileData = await fetchDocument(fileID, personalToken);
         setFileData(fileData);
 
-        setLoading("LINTING");
-        const lintErrors = await lint(fileData);
-        setLintErrors(lintErrors);
+        // setLoading("LINTING");
+        // const lintErrors = await lint(fileData);
+        // setLintErrors(lintErrors);
 
         setLoading("LOADING_IMAGES");
         const componentIds = fileData ? Object.keys(fileData.components) : [];

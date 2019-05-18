@@ -30,7 +30,7 @@ function Report({ fileData, imageData, lintErrors }: ReportProps) {
   const summary = componentSummary(fileData);
 
   return <div>
-    <DocumentName>{fileData.name}</DocumentName>
+    <DocumentName><DocumentNameLabel>File:</DocumentNameLabel> {fileData.name}</DocumentName>
     <LintErrors lintErrors={lintErrors} />
     <Section name="Components from the Library" components={summary.LIBRARY} imageData={imageData} />
     <Section name="Components in the Document" components={summary.DOCUMENT} imageData={imageData} />
@@ -76,8 +76,14 @@ function LintError({location, message}: {location:string, message:string}) {
 
 
 const DocumentName = styled.h1`
+  font-weight:900;
+`;
+const DocumentNameLabel = styled.span`
+  font-weight: 300;
+  color: #999;
 `;
 const SectionName = styled.h2`
+  font-weight:500;
 `;
 const SectionContainer = styled.section`
 `;
@@ -86,7 +92,10 @@ const ComponentContainer = styled.div`
   margin-right: 20px;
   padding: 20px;
   border-radius: 3px;
-  background-color: #f8f8f8;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: rgba(25,25,25,0.06) 0px 7px 15px 0px;
 `;
 const ComponentsList = styled.div`
   display: flex;
@@ -94,9 +103,14 @@ const ComponentsList = styled.div`
 `;
 const ComponentImageContainer = styled.div`
   margin: 20px 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
   img {
-    max-width: 400px;
-    max-height: 400px;
+    max-width: 200px;
+    max-height: 200px;
   }
 `;
 const ComponentPath = styled.div`
@@ -105,8 +119,11 @@ const ComponentPath = styled.div`
 `;
 const ComponentName = styled.div`
   font-weight: bold;
+  color: #999;
 `;
-const ComponentCount = styled.div``;
+const ComponentCount = styled.div`
+  font-size: 85%;
+`;
 const Count = styled.span`
   display: inline-block;
   border-radius: 1em;
