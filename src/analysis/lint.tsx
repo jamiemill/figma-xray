@@ -17,12 +17,12 @@ export default async function lint(fileData: FileData) {
   const rules = await Promise.all(
     rulesCtors.map(async r => {
       const ruleInstance = new r();
-      if (typeof ruleInstance.ruleDidLoad === 'function') {
+      if (typeof ruleInstance.ruleDidLoad === "function") {
         await ruleInstance.ruleDidLoad(fileData, undefined, undefined);
       }
       return ruleInstance;
     })
   );
-  
+
   return dslint(fileData, rules);
 }

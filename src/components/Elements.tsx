@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Input = styled.input`
   padding: 0.75em 1em;
@@ -16,7 +16,7 @@ export const Field = styled.div`
 `;
 
 type ButtonProps = {
-  secondary?: boolean
+  secondary?: boolean;
 };
 
 export const Button = styled.button<ButtonProps>`
@@ -26,8 +26,10 @@ export const Button = styled.button<ButtonProps>`
   background-color: #123;
   color: white;
   border: 1px solid #123;
-  ${props => props.secondary && css`
-    background-color: transparent;
-    color: #123;
-  `}
+  ${props =>
+    props.secondary &&
+    css`
+      background-color: transparent;
+      color: #123;
+    `}
 `;

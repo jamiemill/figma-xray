@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 import Report from "./Report";
-import {fetchDocument, FileData, ImageData, fetchImages} from "../api";
-import { componentSummary, ComponentSummary } from '../analysis/analysis';
+import { fetchDocument, FileData, ImageData, fetchImages } from "../api";
+import { componentSummary, ComponentSummary } from "../analysis/analysis";
 
 type FileProps = {
-  fileID: string,
-  personalToken: string
+  fileID: string;
+  personalToken: string;
 };
 
-export default function File({ fileID, personalToken }:FileProps) {
+export default function File({ fileID, personalToken }: FileProps) {
   const [fileData, setFileData] = useState<FileData>(null);
   const [summary, setSummary] = useState<ComponentSummary | null>(null);
   const [error, setError] = useState<string | null>(null);

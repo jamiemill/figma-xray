@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 
-import {createGlobalStyle} from "styled-components";
-import { Normalize } from 'styled-normalize'
+import { createGlobalStyle } from "styled-components";
+import { Normalize } from "styled-normalize";
 
 const GlobalStyle = createGlobalStyle`
 

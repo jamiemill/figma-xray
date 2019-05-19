@@ -13,7 +13,8 @@ function App() {
   const [fileID, setFileID] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedPersonalToken = window.localStorage.getItem("personalToken") || "";
+    const savedPersonalToken =
+      window.localStorage.getItem("personalToken") || "";
     if (savedPersonalToken) {
       setPersonalToken(savedPersonalToken);
     }
@@ -40,15 +41,18 @@ function App() {
   function handleFileIDChange(fileID: string) {
     setFileID(fileID);
     if (fileID) {
-      window.history.pushState(null, "", `#/file/${fileID}`)
+      window.history.pushState(null, "", `#/file/${fileID}`);
     } else {
-      window.history.pushState(null, "", `#/`)
+      window.history.pushState(null, "", `#/`);
     }
   }
 
   return (
     <Container>
-      <PersonalTokenForm personalToken={personalToken} onChange={handleTokenChange} />
+      <PersonalTokenForm
+        personalToken={personalToken}
+        onChange={handleTokenChange}
+      />
       {fileID ? null : <FileIDForm onSubmit={handleFileIDChange} />}
       {fileID && personalToken ? (
         <>

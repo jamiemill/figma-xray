@@ -2,10 +2,9 @@ import * as Figma from "figma-js";
 
 export type FileData = Figma.FileResponse | null;
 export type Images = {
-    [key: string]: string;
+  [key: string]: string;
 };
 export type ImageData = Images | null;
-  
 
 export function fetchDocument(
   fileID: string,
@@ -28,7 +27,6 @@ export function fetchDocument(
   });
   return p;
 }
-
 
 export function fetchImages(
   fileID: string,

@@ -16,7 +16,7 @@ type FormProps = {
 type InnerFormProps = {
   onChange: OnSubmit;
   personalToken: string | null;
-  onBlur: () => void
+  onBlur: () => void;
 };
 
 function PersonalTokenForm({ onChange, personalToken }: FormProps) {
@@ -24,20 +24,33 @@ function PersonalTokenForm({ onChange, personalToken }: FormProps) {
   return (
     <FormContainer>
       {expanded ? (
-        <Form onChange={onChange} personalToken={personalToken} onBlur={() => setExpanded(false)} />
+        <Form
+          onChange={onChange}
+          personalToken={personalToken}
+          onBlur={() => setExpanded(false)}
+        />
       ) : (
-        <Summary personalToken={personalToken} onClick={() => setExpanded(true)} />
+        <Summary
+          personalToken={personalToken}
+          onClick={() => setExpanded(true)}
+        />
       )}
     </FormContainer>
   );
 }
 
-function Summary({ personalToken, onClick }: { personalToken: string | null, onClick:()=>void }) {
+function Summary({
+  personalToken,
+  onClick
+}: {
+  personalToken: string | null;
+  onClick: () => void;
+}) {
   return (
     <SummaryContainer>
       Personal Token:{" "}
       <PersonalTokenChangeLink onClick={onClick}>
-        {personalToken ? personalToken.substr(0,5) + "..." : "Not set"}
+        {personalToken ? personalToken.substr(0, 5) + "..." : "Not set"}
       </PersonalTokenChangeLink>
     </SummaryContainer>
   );
