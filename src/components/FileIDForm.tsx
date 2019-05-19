@@ -1,4 +1,4 @@
-import React, {useState, SyntheticEvent, useEffect} from 'react';
+import React, {useState, SyntheticEvent} from 'react';
 import { Field, Label, Input, Button } from './Elements';
 import styled from 'styled-components';
 

@@ -1,4 +1,4 @@
-import React, {useState, SyntheticEvent, useEffect} from 'react';
+import React, {useState, SyntheticEvent} from 'react';
 import { Field, Label, Input, Button } from './Elements';
 import styled from 'styled-components';
 
@@ -9,33 +9,16 @@ export const FormContainer = styled.div`
 type OnSubmit = (personalToken:string) => void;
 
 type FormProps = {
-  onSubmit: OnSubmit
+  onChange: OnSubmit,
+  personalToken: string | null
 };
 
-function PersonalTokenForm(props:FormProps) {
-  const [personalToken, setPersonalToken] = useState("");
-
-  useEffect(() => {
-    const savedPersonalToken = window.localStorage.getItem("personalToken") || "";
-    if (savedPersonalToken) {
-      setPersonalToken(savedPersonalToken);
-    }
-  }, []);
-
-  function handleSubmit(e:SyntheticEvent) {
-    e.preventDefault();
-    props.onSubmit(personalToken)
-    window.localStorage.setItem("personalToken", personalToken);
-  }
-
+function PersonalTokenForm({onChange, personalToken}:FormProps) {
   return <FormContainer>
-    <form onSubmit={handleSubmit}>
+    <form>
       <Field>
         <Label htmlFor="personalToken">Personal Token</Label>
-        <Input autoComplete="off" name="personalToken" value={personalToken} onChange={e => setPersonalToken(e.target.value)} />
-      </Field>
-      <Field>
-        <Button secondary type="submit">Set</Button>
+        <Input autoComplete="off" name="personalToken" value={personalToken || ""} onChange={e => onChange(e.target.value)} />
       </Field>
     </form>
   </FormContainer>

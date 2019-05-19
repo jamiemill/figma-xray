@@ -9,24 +9,40 @@ const Container = styled.div`
 `;
 
 function App() {
-  const [personalToken, setPersonalToken] = useState<string|null>(null);
-  function handleTokenChange(personalToken:string) {
+  const [personalToken, setPersonalToken] = useState<string | null>(null);
+  const [fileID, setFileID] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedPersonalToken = window.localStorage.getItem("personalToken") || "";
+    if (savedPersonalToken) {
+      setPersonalToken(savedPersonalToken);
+    }
+  }, []);
+
+  function handleTokenChange(personalToken: string) {
     setPersonalToken(personalToken);
+    window.localStorage.setItem("personalToken", personalToken);
   }
-  const [fileID, setFileID] = useState<string|null>(null);
-  function handleFileIDChange(fileID:string) {
+  function handleFileIDChange(fileID: string) {
     setFileID(fileID);
   }
 
   return (
     <Container>
-      <PersonalTokenForm onSubmit={handleTokenChange} />
-      <FileIDForm onSubmit={handleFileIDChange} />
+      <PersonalTokenForm personalToken={personalToken} onChange={handleTokenChange} />
+      {fileID ? null : <FileIDForm onSubmit={handleFileIDChange} />}
       {fileID && personalToken ? (
-        <File fileID={fileID} personalToken={personalToken} />
+        <>
+          <BackLink onClick={() => setFileID("")}>Back</BackLink>
+          <File fileID={fileID} personalToken={personalToken} />
+        </>
       ) : null}
     </Container>
   );
 }
 
 export default App;
+
+const BackLink = styled.div`
+
+`;
