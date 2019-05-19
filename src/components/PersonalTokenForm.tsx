@@ -17,22 +17,24 @@ type InnerFormProps = {
   onChange: OnSubmit;
   personalToken: string | null;
   onBlur: () => void;
+  onFocus: () => void;
 };
 
 function PersonalTokenForm({ onChange, personalToken }: FormProps) {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(false);
   return (
     <FormContainer>
-      {expanded ? (
+      {!personalToken || editing ? (
         <Form
           onChange={onChange}
           personalToken={personalToken}
-          onBlur={() => setExpanded(false)}
+          onFocus={() => setEditing(true)}
+          onBlur={() => setEditing(false)}
         />
       ) : (
         <Summary
           personalToken={personalToken}
-          onClick={() => setExpanded(true)}
+          onClick={() => setEditing(true)}
         />
       )}
     </FormContainer>
@@ -50,7 +52,7 @@ function Summary({
     <SummaryContainer>
       Personal Token:{" "}
       <PersonalTokenChangeLink onClick={onClick}>
-        {personalToken ? personalToken.substr(0, 5) + "..." : "Not set"}
+        {personalToken && personalToken.substr(0, 5) + "..."}
       </PersonalTokenChangeLink>
     </SummaryContainer>
   );
@@ -62,14 +64,10 @@ const SummaryContainer = styled.div`
 
 const PersonalTokenChangeLink = styled.span`
   text-decoration: underline;
-  /* font-family: monospace; */
   cursor: pointer;
 `;
 
-function Form({ onChange, personalToken, onBlur }: InnerFormProps) {
-  useEffect(() => {
-    input && input.current && input.current.focus();
-  }, []);
+function Form({ onChange, personalToken, onBlur, onFocus }: InnerFormProps) {
   const input = useRef<HTMLInputElement>(null);
   return (
     <Field>
@@ -81,6 +79,7 @@ function Form({ onChange, personalToken, onBlur }: InnerFormProps) {
         value={personalToken || ""}
         onChange={e => onChange(e.target.value)}
         onBlur={onBlur}
+        onFocus={onFocus}
         ref={input}
         placeholder="e.g. 12345-12345678-1234-1234-1234-123456789012"
       />
