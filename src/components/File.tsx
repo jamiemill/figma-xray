@@ -18,7 +18,6 @@ export default function File({ fileID, personalToken }: FileProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<LoadingStatus>("NONE");
   const [imageData, setImageData] = useState<ImageData>(null);
-  const [lintErrors, setLintErrors] = useState<any>(null);
 
   useEffect(() => {
     const loadEverything = async () => {
@@ -72,7 +71,6 @@ export default function File({ fileID, personalToken }: FileProps) {
           fileData={fileData}
           summary={summary}
           imageData={imageData}
-          lintErrors={lintErrors}
         />
       ) : null}
     </div>

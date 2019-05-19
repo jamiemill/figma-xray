@@ -15,7 +15,6 @@ type ReportProps = {
   fileData: FileData;
   summary: ComponentSummary | null;
   imageData: ImageData;
-  lintErrors: any;
 };
 
 type SectionProps = {
@@ -30,20 +29,13 @@ type ComponentProps = {
   imageData: ImageData;
 };
 
-function Report({
-  fileID,
-  fileData,
-  summary,
-  imageData,
-  lintErrors
-}: ReportProps) {
+function Report({ fileID, fileData, summary, imageData }: ReportProps) {
   if (fileData === null || summary === null || fileID === null) {
     return null;
   }
 
   return (
     <div>
-      <LintErrors lintErrors={lintErrors} />
       <Section
         name="Components from the Library"
         subtitle="These are the components you've used from the team library."
@@ -95,14 +87,14 @@ function Component({ component, imageData }: ComponentProps) {
         {component.path && component.path.join(" > ")}
       </ComponentPath>
       <ComponentName>
-        <img src={componentIcon} /> {component.name}
+        <img src={componentIcon} alt="Figma Component Icon" /> {component.name}
       </ComponentName>
       <ComponentImageContainer>
         <img
           srcSet={imageData ? imageData[component.id] + " 2w" : ""}
           sizes="1px"
           src={imageData ? imageData[component.id] : ""}
-          alt=""
+          alt="Component Preview"
         />
       </ComponentImageContainer>
       <ComponentCount onClick={() => setExpandInstances(!expandInstances)}>
@@ -127,7 +119,8 @@ function InstanceList({ instances }: { instances: Array<{ path: Path }> }) {
         (ins, i) =>
           ins.path && (
             <div>
-              <img src={pageIcon} /> {ins.path.join(" > ")}
+              <img src={pageIcon} alt="Figma Page Icon" />{" "}
+              {ins.path.join(" > ")}
             </div>
           )
       )}
@@ -140,37 +133,6 @@ const InstanceListContainer = styled.div`
   margin-top: 10px;
   margin-left: 5px;
 `;
-
-function LintErrors({ lintErrors }: { lintErrors: Array<any> | null }) {
-  return (
-    <SectionContainer>
-      <SectionName>Lint Errors</SectionName>
-      {lintErrors ? (
-        <div>
-          {lintErrors.map((e: any, i: number) => (
-            <LintError key={i} location={e.location} message={e.message} />
-          ))}
-        </div>
-      ) : (
-        <div>None.</div>
-      )}
-    </SectionContainer>
-  );
-}
-
-function LintError({
-  location,
-  message
-}: {
-  location: string;
-  message: string;
-}) {
-  return (
-    <div>
-      {location} &mdash; {message}
-    </div>
-  );
-}
 
 const SectionName = styled.h2`
   font-weight: 700;

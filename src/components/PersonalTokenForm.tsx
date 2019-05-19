@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Field, Label, Input, Button } from "./Elements";
+import React, { useState, useRef } from "react";
+import { Field, Label, Input } from "./Elements";
 import styled from "styled-components";
 
 export const FormContainer = styled.div`
