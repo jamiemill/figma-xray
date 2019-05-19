@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Form, { ApiInfo } from "./Form";
+import PersonalTokenForm from "./PersonalTokenForm";
+import FileIDForm from "./FileIDForm";
 import File from "./File";
 import styled from "styled-components";
 
@@ -8,18 +9,19 @@ const Container = styled.div`
 `;
 
 function App() {
-  const [apiInfo, setApiInfo] = useState<ApiInfo>(null);
-
-  function handleApiInfoChange(apiInfo: ApiInfo) {
-    setApiInfo(apiInfo);
+  const [personalToken, setPersonalToken] = useState<string|null>(null);
+  function handleTokenChange(personalToken:string) {
+    setPersonalToken(personalToken);
   }
-
-  const fileID: string | null = apiInfo && apiInfo.fileID;
-  const personalToken: string | null = apiInfo && apiInfo.personalToken;
+  const [fileID, setFileID] = useState<string|null>(null);
+  function handleFileIDChange(fileID:string) {
+    setFileID(fileID);
+  }
 
   return (
     <Container>
-      <Form onSubmit={handleApiInfoChange} />
+      <PersonalTokenForm onSubmit={handleTokenChange} />
+      <FileIDForm onSubmit={handleFileIDChange} />
       {fileID && personalToken ? (
         <File fileID={fileID} personalToken={personalToken} />
       ) : null}

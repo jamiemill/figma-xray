@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 
 export const Input = styled.input`
   padding: 0.75em 1em;
@@ -14,11 +14,20 @@ export const Label = styled.label`
 export const Field = styled.div`
   margin-bottom: 1em;
 `;
-export const Button = styled.button`
-  background-color: #123;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.25em;
-  color: white;
+
+type ButtonProps = {
+  secondary?: boolean
+};
+
+export const Button = styled.button<ButtonProps>`
   padding: 0.75em 1em;
+  font-weight: bold;
+  border-radius: 0.25em;
+  background-color: #123;
+  color: white;
+  border: 1px solid #123;
+  ${props => props.secondary && css`
+    background-color: transparent;
+    color: #123;
+  `}
 `;
