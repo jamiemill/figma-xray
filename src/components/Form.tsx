@@ -1,34 +1,9 @@
 import React, {useState, SyntheticEvent, useEffect} from 'react';
-import styled from "styled-components";
+import { Field, Label, Input, Button } from './Elements';
+import styled from 'styled-components';
 
-const FormContainer = styled.div`
+export const FormContainer = styled.div`
   margin-bottom: 40px;
-`;
-
-const Input = styled.input`
-  padding: 0.75em 1em;
-  border-radius: 0.25em;
-  border: 1px solid #ccc;
-  width: 100%;
-  font-family: monospace;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5em;
-`;
-
-const Field = styled.div`
-  margin-bottom: 1em;
-`;
-
-const Button = styled.button`
-  background-color: #123;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.25em;
-  color: white;
-  padding: 0.75em 1em;
 `;
 
 export type ApiInfo = {
