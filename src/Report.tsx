@@ -40,14 +40,6 @@ function Report({ fileID, fileData, summary, imageData, lintErrors }: ReportProp
   </div>;
 }
 
-const DocumentLink = styled.a`
-  color: inherit;
-  text-decoration: none;
-  :hover {
-    text-decoration: underline;
-  }
-`;
-
 function Section({name, subtitle, components, imageData}:SectionProps) {
   return <SectionContainer>
     <SectionName>{name}</SectionName>
@@ -110,6 +102,10 @@ const DocumentNameLabel = styled.span`
   font-weight: 300;
   color: #999;
 `;
+const DocumentLink = styled.a`
+  color: inherit;
+`;
+
 const SectionName = styled.h2`
   font-weight:700;
   margin: 10px 0 10px 0;
