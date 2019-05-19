@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FileData, ImageData } from "../api";
+import componentIcon from "../icons/ComponentIcon.svg";
+import pageIcon from "../icons/PageIcon.svg";
 
 import {
   ComponentSummary,
@@ -92,7 +94,9 @@ function Component({ component, imageData }: ComponentProps) {
       <ComponentPath>
         {component.path && component.path.join(" > ")}
       </ComponentPath>
-      <ComponentName>{component.name}</ComponentName>
+      <ComponentName>
+        <img src={componentIcon} /> {component.name}
+      </ComponentName>
       <ComponentImageContainer>
         <img
           srcSet={imageData ? imageData[component.id] + " 2w" : ""}
@@ -119,16 +123,22 @@ function Component({ component, imageData }: ComponentProps) {
 function InstanceList({ instances }: { instances: Array<{ path: Path }> }) {
   return (
     <InstanceListContainer>
-      {instances.map((ins, i) => ins.path && <li>{ins.path.join(" > ")}</li>)}
+      {instances.map(
+        (ins, i) =>
+          ins.path && (
+            <div>
+              <img src={pageIcon} /> {ins.path.join(" > ")}
+            </div>
+          )
+      )}
     </InstanceListContainer>
   );
 }
 
-const InstanceListContainer = styled.ul`
+const InstanceListContainer = styled.div`
   font-size: 85%;
-  margin: 10px 0 0 0;
-  padding: 0 0 0 10px;
-  list-style-position: inside;
+  margin-top: 10px;
+  margin-left: 5px;
 `;
 
 function LintErrors({ lintErrors }: { lintErrors: Array<any> | null }) {
@@ -202,10 +212,11 @@ const ComponentImageContainer = styled.div`
 const ComponentPath = styled.div`
   color: #999;
   font-size: 85%;
+  margin-bottom: 4px;
 `;
 const ComponentName = styled.div`
   font-weight: bold;
-  color: #999;
+  color: #7b67fb;
 `;
 const ComponentCount = styled.div`
   cursor: pointer;
