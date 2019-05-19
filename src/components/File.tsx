@@ -20,40 +20,34 @@ export default function File({ fileID, personalToken }:FileProps) {
   const [lintErrors, setLintErrors] = useState<any>(null);
 
   useEffect(() => {
-    if (fileID && personalToken) {
-      const loadEverything = async () => {
-        setLoading("LOADING_DOCUMENT");
-        setFileData(null);
-        setImageData(null);
-        setError(null);
-        const fileData = await fetchDocument(fileID, personalToken);
-        setFileData(fileData);
-
-        if (fileData) {
-          const summary = componentSummary(fileData);
-          setSummary(summary);
-        }
-
-        setLoading("LOADING_IMAGES");
-        const componentIds = fileData ? Object.keys(fileData.components) : [];
-        const images = await fetchImages(fileID, personalToken, componentIds);
-        setImageData(images);
-
-        setLoading("NONE");
-      };
-      loadEverything().catch(e => {
-        setLoading("NONE");
-        if (e.request) {
-          setError(e.message);
-        } else {
-          throw e;
-        }
-      });
-    } else {
-      setLoading("NONE");
+    const loadEverything = async () => {
+      setLoading("LOADING_DOCUMENT");
       setFileData(null);
       setImageData(null);
-    }
+      setError(null);
+      const fileData = await fetchDocument(fileID, personalToken);
+      setFileData(fileData);
+
+      if (fileData) {
+        const summary = componentSummary(fileData);
+        setSummary(summary);
+      }
+
+      setLoading("LOADING_IMAGES");
+      const componentIds = fileData ? Object.keys(fileData.components) : [];
+      const images = await fetchImages(fileID, personalToken, componentIds);
+      setImageData(images);
+
+      setLoading("NONE");
+    };
+    loadEverything().catch(e => {
+      setLoading("NONE");
+      if (e.request) {
+        setError(e.message);
+      } else {
+        throw e;
+      }
+    });
   }, [fileID, personalToken]);
 
   return (
