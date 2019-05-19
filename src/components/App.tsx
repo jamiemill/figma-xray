@@ -17,11 +17,21 @@ function App() {
     if (savedPersonalToken) {
       setPersonalToken(savedPersonalToken);
     }
+
+    handleURLChange();
+    window.onpopstate = function() {
+      handleURLChange();
+    };
+  }, []);
+
+  function handleURLChange() {
     const fileIDHashMatch = window.location.hash.match(/#\/file\/(\w+)/);
     if (fileIDHashMatch) {
       setFileID(fileIDHashMatch[1]);
+    } else {
+      setFileID(null);
     }
-  }, []);
+  }
 
   function handleTokenChange(personalToken: string) {
     setPersonalToken(personalToken);
@@ -30,9 +40,9 @@ function App() {
   function handleFileIDChange(fileID: string) {
     setFileID(fileID);
     if (fileID) {
-      window.location.hash = `/file/${fileID}`;
+      window.history.pushState(null, "", `#/file/${fileID}`)
     } else {
-      window.location.hash = ``;
+      window.history.pushState(null, "", `#/`)
     }
   }
 
