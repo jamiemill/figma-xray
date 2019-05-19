@@ -10,14 +10,15 @@ type OnSubmit = (personalToken: string) => void;
 
 type FormProps = {
   onSubmit: OnSubmit;
+  noTokenYet: boolean;
 };
 
-function FileIDForm(props: FormProps) {
+function FileIDForm({ onSubmit, noTokenYet }: FormProps) {
   const [fileID, setFileID] = useState("");
 
   function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
-    props.onSubmit(fileID);
+    onSubmit(fileID);
   }
 
   return (
@@ -36,7 +37,9 @@ function FileIDForm(props: FormProps) {
           <p>Use the string of characters inside a Figma file's URL.</p>
         </Field>
         <Field>
-          <Button type="submit">X-Ray this file</Button>
+          <Button type="submit" disabled={noTokenYet || !fileID}>
+            X-Ray this file
+          </Button>
         </Field>
       </form>
     </FormContainer>

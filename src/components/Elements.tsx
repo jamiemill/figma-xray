@@ -26,6 +26,11 @@ export const Button = styled.button<ButtonProps>`
   font-weight: bold;
   border-radius: 0.25em;
   background-color: #123;
+  ${props =>
+    props.disabled &&
+    css`
+      opacity: 0.2;
+    `}
   color: white;
   border: 1px solid #123;
   ${props =>

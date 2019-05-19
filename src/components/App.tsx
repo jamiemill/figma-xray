@@ -53,7 +53,9 @@ function App() {
         personalToken={personalToken}
         onChange={handleTokenChange}
       />
-      {personalToken && !fileID && <FileIDForm onSubmit={handleFileIDChange} />}
+      {!fileID && (
+        <FileIDForm onSubmit={handleFileIDChange} noTokenYet={!personalToken} />
+      )}
       {personalToken && fileID && (
         <>
           <BackLink onClick={() => handleFileIDChange("")}>
