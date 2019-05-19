@@ -41,15 +41,6 @@ function Report({
 
   return (
     <div>
-      <DocumentName>
-        <DocumentNameLabel>File:</DocumentNameLabel>{" "}
-        <DocumentLink
-          target="_blank"
-          href={`https://www.figma.com/file/${fileID}`}
-        >
-          {fileData.name}
-        </DocumentLink>
-      </DocumentName>
       <LintErrors lintErrors={lintErrors} />
       <Section
         name="Components from the Library"
@@ -170,17 +161,6 @@ function LintError({
     </div>
   );
 }
-
-const DocumentName = styled.h1`
-  font-weight: 900;
-`;
-const DocumentNameLabel = styled.span`
-  font-weight: 300;
-  color: #999;
-`;
-const DocumentLink = styled.a`
-  color: inherit;
-`;
 
 const SectionName = styled.h2`
   font-weight: 700;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import Report from "./Report";
 import { fetchDocument, FileData, ImageData, fetchImages } from "../api";
@@ -9,13 +10,13 @@ type FileProps = {
   personalToken: string;
 };
 
+type LoadingStatus = "LOADING_DOCUMENT" | "LOADING_IMAGES" | "LINTING" | "NONE";
+
 export default function File({ fileID, personalToken }: FileProps) {
   const [fileData, setFileData] = useState<FileData>(null);
   const [summary, setSummary] = useState<ComponentSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<
-    "LOADING_DOCUMENT" | "LOADING_IMAGES" | "LINTING" | "NONE"
-  >("NONE");
+  const [loading, setLoading] = useState<LoadingStatus>("NONE");
   const [imageData, setImageData] = useState<ImageData>(null);
   const [lintErrors, setLintErrors] = useState<any>(null);
 
@@ -52,15 +53,19 @@ export default function File({ fileID, personalToken }: FileProps) {
 
   return (
     <div>
-      {
-        {
-          NONE: null,
-          LOADING_DOCUMENT: "Loading document...",
-          LOADING_IMAGES: "Loading images...",
-          LINTING: "Linting..."
-        }[loading]
-      }
-      {error ? error : null}
+      <DocumentName>
+        {fileData ? (
+          <DocumentLink
+            target="_blank"
+            href={`https://www.figma.com/file/${fileID}`}
+          >
+            {fileData.name}
+          </DocumentLink>
+        ) : null}{" "}
+        <DocumentNameLabel>
+          <LoadingStatus loading={loading} error={error} />
+        </DocumentNameLabel>
+      </DocumentName>
       {fileData ? (
         <Report
           fileID={fileID}
@@ -73,3 +78,30 @@ export default function File({ fileID, personalToken }: FileProps) {
     </div>
   );
 }
+
+function LoadingStatus({
+  loading,
+  error
+}: {
+  loading: LoadingStatus;
+  error: string | null;
+}) {
+  const map = {
+    NONE: null,
+    LOADING_DOCUMENT: "Loading document...",
+    LOADING_IMAGES: "Loading images...",
+    LINTING: "Linting..."
+  };
+  return <>{error ? error : map[loading]}</>;
+}
+
+const DocumentName = styled.h1`
+  font-weight: 900;
+`;
+const DocumentNameLabel = styled.span`
+  font-weight: 300;
+  color: #999;
+`;
+const DocumentLink = styled.a`
+  color: inherit;
+`;
