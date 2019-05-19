@@ -44,5 +44,7 @@ function App() {
 export default App;
 
 const BackLink = styled.div`
-
+  text-decoration: underline;
+  margin-bottom: 20px;
+  cursor: pointer;
 `;
