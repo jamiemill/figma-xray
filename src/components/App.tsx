@@ -56,7 +56,9 @@ function App() {
       {fileID ? null : <FileIDForm onSubmit={handleFileIDChange} />}
       {fileID && personalToken ? (
         <>
-          <BackLink onClick={() => handleFileIDChange("")}>Back</BackLink>
+          <BackLink onClick={() => handleFileIDChange("")}>
+            Choose another file
+          </BackLink>
           <File fileID={fileID} personalToken={personalToken} />
         </>
       ) : null}
