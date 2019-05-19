@@ -5,7 +5,7 @@ import File from "./File";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 1em;
+  padding: 20px;
 `;
 
 function App() {
@@ -53,15 +53,15 @@ function App() {
         personalToken={personalToken}
         onChange={handleTokenChange}
       />
-      {fileID ? null : <FileIDForm onSubmit={handleFileIDChange} />}
-      {fileID && personalToken ? (
+      {personalToken && !fileID && <FileIDForm onSubmit={handleFileIDChange} />}
+      {personalToken && fileID && (
         <>
           <BackLink onClick={() => handleFileIDChange("")}>
             Choose another file
           </BackLink>
           <File fileID={fileID} personalToken={personalToken} />
         </>
-      ) : null}
+      )}
     </Container>
   );
 }
