@@ -1,4 +1,4 @@
-import { FileData } from "./api";
+import { FileData } from "../api";
 
 import { lint as dslint } from "dslint";
 

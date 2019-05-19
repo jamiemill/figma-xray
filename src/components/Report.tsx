@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { FileData, ImageData } from "./api";
+import { FileData, ImageData } from "../api";
 
-import {componentSummary, ComponentSummary, ComponentWithStats, Path} from "./analysis";
+import {componentSummary, ComponentSummary, ComponentWithStats, Path} from "../analysis/analysis";
 import styled from "styled-components";
 
 type ReportProps =  {

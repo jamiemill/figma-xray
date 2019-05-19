@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Report from "./Report";
-import {fetchDocument, FileData, ImageData, fetchImages} from "./api";
-import { componentSummary, ComponentSummary } from './analysis';
+import {fetchDocument, FileData, ImageData, fetchImages} from "../api";
+import { componentSummary, ComponentSummary } from '../analysis/analysis';
 
 type FileProps = {
   fileID: string,
