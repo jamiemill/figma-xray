@@ -5,6 +5,7 @@ import {componentSummary, ComponentSummary, ComponentWithStats, Path} from "./an
 import styled from "styled-components";
 
 type ReportProps =  {
+  fileID: string | null,
   fileData: FileData,
   summary: ComponentSummary | null,
   imageData: ImageData,
@@ -25,19 +26,27 @@ type ComponentProps = {
 
 
 
-function Report({ fileData, summary, imageData, lintErrors }: ReportProps) {
-  if (fileData === null || summary === null) {
+function Report({ fileID, fileData, summary, imageData, lintErrors }: ReportProps) {
+  if (fileData === null || summary === null || fileID === null) {
     return null;
   }
 
   return <div>
-    <DocumentName><DocumentNameLabel>File:</DocumentNameLabel> {fileData.name}</DocumentName>
+    <DocumentName><DocumentNameLabel>File:</DocumentNameLabel> <DocumentLink target="_blank" href={`https://www.figma.com/file/${fileID}`}>{fileData.name}</DocumentLink></DocumentName>
     <LintErrors lintErrors={lintErrors} />
     <Section name="Components from the Library" subtitle="These are the components you've used from the team library." components={summary.LIBRARY} imageData={imageData} />
     <Section name="Components in the Document" subtitle="If they are never used, consider deleting." components={summary.DOCUMENT} imageData={imageData} />
     <Section name="Deleted Components" subtitle="Undiscoverable components. Consider restoring the master, or replace the instance." components={summary.DELETED_FROM_DOCUMENT} imageData={imageData} />
   </div>;
 }
+
+const DocumentLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+  :hover {
+    text-decoration: underline;
+  }
+`;
 
 function Section({name, subtitle, components, imageData}:SectionProps) {
   return <SectionContainer>

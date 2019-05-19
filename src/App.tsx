@@ -72,7 +72,7 @@ function App() {
       <Form onSubmit={handleApiInfoChange} />
       { {"NONE" : null, "LOADING_DOCUMENT": "Loading document...", "LOADING_IMAGES": "Loading images...", "LINTING": "Linting..."}[loading] }
       {error ? error : null}
-      {fileData ? <Report fileData={fileData} summary={summary} imageData={imageData} lintErrors={lintErrors} /> : null}
+      {fileData ? <Report fileID={fileID} fileData={fileData} summary={summary} imageData={imageData} lintErrors={lintErrors} /> : null}
     </Container>
   );
 }
