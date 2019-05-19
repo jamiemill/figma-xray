@@ -1,14 +1,16 @@
 import styled, { css } from "styled-components";
 
 export const Input = styled.input`
-  padding: 0.75em 1em;
+  padding: 0.75em;
   border-radius: 0.25em;
   border: 1px solid #ccc;
   width: 100%;
-  font-family: monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 `;
 export const Label = styled.label`
   display: block;
+  font-weight: 700;
   margin-bottom: 0.5em;
 `;
 export const Field = styled.div`

@@ -76,12 +76,17 @@ function Form({ onChange, personalToken, onBlur }: InnerFormProps) {
       <Label htmlFor="personalToken">Personal Token</Label>
       <Input
         autoComplete="off"
+        spellCheck={false}
         name="personalToken"
         value={personalToken || ""}
         onChange={e => onChange(e.target.value)}
         onBlur={onBlur}
         ref={input}
+        placeholder="e.g. 12345-12345678-1234-1234-1234-123456789012"
       />
+      <p>
+        Generate a token in Figma's Account Settings page and paste it here.
+      </p>
     </Field>
   );
 }
