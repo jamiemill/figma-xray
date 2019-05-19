@@ -17,6 +17,10 @@ function App() {
     if (savedPersonalToken) {
       setPersonalToken(savedPersonalToken);
     }
+    const fileIDHashMatch = window.location.hash.match(/#\/file\/(\w+)/);
+    if (fileIDHashMatch) {
+      setFileID(fileIDHashMatch[1]);
+    }
   }, []);
 
   function handleTokenChange(personalToken: string) {
@@ -25,6 +29,11 @@ function App() {
   }
   function handleFileIDChange(fileID: string) {
     setFileID(fileID);
+    if (fileID) {
+      window.location.hash = `/file/${fileID}`;
+    } else {
+      window.location.hash = ``;
+    }
   }
 
   return (
@@ -33,7 +42,7 @@ function App() {
       {fileID ? null : <FileIDForm onSubmit={handleFileIDChange} />}
       {fileID && personalToken ? (
         <>
-          <BackLink onClick={() => setFileID("")}>Back</BackLink>
+          <BackLink onClick={() => handleFileIDChange("")}>Back</BackLink>
           <File fileID={fileID} personalToken={personalToken} />
         </>
       ) : null}
