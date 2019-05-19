@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Field, Label, Input, Button } from "./Elements";
 import styled from "styled-components";
 
@@ -67,6 +67,10 @@ const PersonalTokenChangeLink = styled.span`
 `;
 
 function Form({ onChange, personalToken, onBlur }: InnerFormProps) {
+  useEffect(() => {
+    input && input.current && input.current.focus();
+  }, []);
+  const input = useRef<HTMLInputElement>(null);
   return (
     <Field>
       <Label htmlFor="personalToken">Personal Token</Label>
@@ -76,6 +80,7 @@ function Form({ onChange, personalToken, onBlur }: InnerFormProps) {
         value={personalToken || ""}
         onChange={e => onChange(e.target.value)}
         onBlur={onBlur}
+        ref={input}
       />
     </Field>
   );
