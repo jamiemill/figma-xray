@@ -90,12 +90,14 @@ function Component({ component, imageData }: ComponentProps) {
         <img src={componentIcon} alt="Figma Component Icon" /> {component.name}
       </ComponentName>
       <ComponentImageContainer>
-        <img
-          srcSet={imageData ? imageData[component.id] + " 2w" : ""}
-          sizes="1px"
-          src={imageData ? imageData[component.id] : ""}
-          alt="Component Preview"
-        />
+        {imageData && (
+          <img
+            srcSet={imageData[component.id] + " 2w"}
+            sizes="1px"
+            src={imageData[component.id]}
+            alt="Component Preview"
+          />
+        )}
       </ComponentImageContainer>
       <ComponentCount onClick={() => setExpandInstances(!expandInstances)}>
         <Count>{component.count}</Count>{" "}
