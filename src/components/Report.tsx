@@ -37,14 +37,14 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
   return (
     <div>
       <Section
-        name="Components from the Library"
+        name="Library Components"
         subtitle="These are the components you've used from the team library."
         components={summary.LIBRARY}
         imageData={imageData}
       />
       <Section
-        name="Components in the Document"
-        subtitle="If they are never used, consider deleting."
+        name="Local Components"
+        subtitle="If any are not used, consider deleting them."
         components={summary.DOCUMENT}
         imageData={imageData}
       />
@@ -59,12 +59,13 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
 }
 
 function Section({ name, subtitle, components, imageData }: SectionProps) {
+  const count = components.length;
   return (
     <SectionContainer>
-      <SectionName>{name}</SectionName>
+      <SectionName>{`${count} ${name}`}</SectionName>
       <SectionSubtitle>{subtitle}</SectionSubtitle>
       <ComponentsList>
-        {components.length > 0
+        {count > 0
           ? components.map(component => (
               <Component
                 key={component.id}
