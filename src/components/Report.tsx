@@ -92,6 +92,7 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
 
 const Tabs = styled.div`
   display: flex;
+  margin-bottom: 20px;
 `;
 function Tab({
   name,
@@ -120,7 +121,7 @@ const TabContainer = styled.div<TabContainerProps>`
   padding: 20px;
   cursor: pointer;
   border-radius: 0.5em;
-  margin-right: 10px;
+  margin-right: 20px;
   background-color: #eee;
   ${props =>
     props.active &&
@@ -139,7 +140,6 @@ function Section({ name, subtitle, components, imageData }: SectionProps) {
   const count = components.length;
   return (
     <SectionContainer>
-      <SectionName>{`${count} ${name}`}</SectionName>
       <SectionSubtitle>{subtitle}</SectionSubtitle>
       <ComponentsList>
         {count > 0

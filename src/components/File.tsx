@@ -95,6 +95,7 @@ function LoadingStatus({
 
 const DocumentName = styled.h1`
   font-weight: 900;
+  margin-bottom: 40px;
 `;
 const DocumentNameLabel = styled.span`
   font-weight: 300;
