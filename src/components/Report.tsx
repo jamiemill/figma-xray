@@ -24,6 +24,7 @@ type SectionProps = {
   subtitle?: string;
   components: Array<ComponentWithStats>;
   imageData: ImageData;
+  sort: Sorts;
 };
 
 type ComponentProps = {
@@ -32,9 +33,11 @@ type ComponentProps = {
 };
 
 type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT";
+type Sorts = "NAME" | "USAGE";
 
 function Report({ fileID, fileData, summary, imageData }: ReportProps) {
   const [currentTab, setCurrentTab] = useState<Tabs>("LIBRARY");
+  const [currentSort, setCurrentSort] = useState<Sorts>("USAGE");
 
   if (fileData === null || summary === null || fileID === null) {
     return null;
@@ -64,12 +67,27 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
           onClick={() => setCurrentTab("DELETED_FROM_DOCUMENT")}
         />
       </Tabs>
+
+      <Tabs>
+        <Tab
+          name="Sort by name"
+          active={currentSort === "NAME"}
+          onClick={() => setCurrentSort("NAME")}
+        />
+        <Tab
+          name="Sort by usage"
+          active={currentSort === "USAGE"}
+          onClick={() => setCurrentSort("USAGE")}
+        />
+      </Tabs>
+
       {currentTab === "LIBRARY" && (
         <Section
           name="Library Components"
           subtitle="These are the components you've used from the team library."
           components={summary.LIBRARY}
           imageData={imageData}
+          sort={currentSort}
         />
       )}
       {currentTab === "DOCUMENT" && (
@@ -78,6 +96,7 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
           subtitle="If any are not used, consider deleting them."
           components={summary.DOCUMENT}
           imageData={imageData}
+          sort={currentSort}
         />
       )}
       {currentTab === "DELETED_FROM_DOCUMENT" && (
@@ -86,20 +105,29 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
           subtitle="Undiscoverable components. Consider restoring the master, or replace the instance."
           components={summary.DELETED_FROM_DOCUMENT}
           imageData={imageData}
+          sort={currentSort}
         />
       )}
     </div>
   );
 }
 
-function Section({ subtitle, components, imageData }: SectionProps) {
+const sorters = {
+  USAGE: (a: ComponentWithStats, b: ComponentWithStats): number =>
+    -1 * (a.count > b.count ? 1 : a.count < b.count ? -1 : 0),
+  NAME: (a: ComponentWithStats, b: ComponentWithStats): number =>
+    a.name.localeCompare(b.name)
+};
+
+function Section({ subtitle, components, imageData, sort }: SectionProps) {
   const count = components.length;
+  const sorted = components.slice(0).sort(sorters[sort]);
   return (
     <SectionContainer>
       <SectionSubtitle>{subtitle}</SectionSubtitle>
       <ComponentsList>
         {count > 0
-          ? components.map(component => (
+          ? sorted.map(component => (
               <Component
                 key={component.id}
                 component={component}

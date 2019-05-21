@@ -11,14 +11,14 @@ export function Tab({
   active
 }: {
   name: string;
-  count: number;
+  count?: number;
   onClick: () => void;
   active: boolean;
 }) {
   return (
     <TabContainer active={active} onClick={onClick}>
       <TabTitle>{name}</TabTitle>
-      <TabSubtitle>{count}</TabSubtitle>
+      {count !== null ? <TabSubtitle>{count}</TabSubtitle> : null}
     </TabContainer>
   );
 }
