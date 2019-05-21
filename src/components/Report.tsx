@@ -192,7 +192,7 @@ const Count = styled.span`
   border-radius: 1em;
   background-color: #ddd;
   font-weight: bold;
-  padding: 0.25em 0.75em;
+  padding: 0.2em 0.5em;
 `;
 
 export default Report;
