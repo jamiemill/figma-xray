@@ -70,14 +70,14 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
 
       <Tabs>
         <Tab
-          name="Sort by name"
-          active={currentSort === "NAME"}
-          onClick={() => setCurrentSort("NAME")}
-        />
-        <Tab
-          name="Sort by usage"
+          name="Sort by Usage"
           active={currentSort === "USAGE"}
           onClick={() => setCurrentSort("USAGE")}
+        />
+        <Tab
+          name="Sort by Name"
+          active={currentSort === "NAME"}
+          onClick={() => setCurrentSort("NAME")}
         />
       </Tabs>
 
