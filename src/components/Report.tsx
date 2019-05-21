@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import styled from "styled-components";
+
 import { FileData, ImageData } from "../api";
 import componentIcon from "../icons/ComponentIcon.svg";
 import pageIcon from "../icons/PageIcon.svg";
@@ -8,7 +10,7 @@ import {
   ComponentWithStats,
   Path
 } from "../analysis/analysis";
-import styled, { css } from "styled-components";
+import { Tabs, Tab } from "./Tabs";
 
 type ReportProps = {
   fileID: string | null;
@@ -89,52 +91,6 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
     </div>
   );
 }
-
-const Tabs = styled.div`
-  display: flex;
-  margin-bottom: 20px;
-`;
-function Tab({
-  name,
-  count,
-  onClick,
-  active
-}: {
-  name: string;
-  count: number;
-  onClick: () => void;
-  active: boolean;
-}) {
-  return (
-    <TabContainer active={active} onClick={onClick}>
-      <TabTitle>{name}</TabTitle>
-      <TabSubtitle>{count}</TabSubtitle>
-    </TabContainer>
-  );
-}
-
-type TabContainerProps = {
-  active: boolean;
-};
-
-const TabContainer = styled.div<TabContainerProps>`
-  padding: 20px;
-  cursor: pointer;
-  border-radius: 0.5em;
-  margin-right: 20px;
-  background-color: #eee;
-  ${props =>
-    props.active &&
-    css`
-      background-color: #123;
-      color: white;
-    `}
-`;
-const TabTitle = styled.div`
-  font-weight: 900;
-  margin-bottom: 0.5em;
-`;
-const TabSubtitle = styled.div``;
 
 function Section({ name, subtitle, components, imageData }: SectionProps) {
   const count = components.length;
