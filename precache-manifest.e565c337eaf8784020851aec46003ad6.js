@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6c42a418951c134199097159d4582788",
+    "revision": "a1411c5d6946d21c77aa1261d60dfe4f",
     "url": "/figma-xray/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/figma-xray/static/js/2.351414a1.chunk.js"
   },
   {
-    "revision": "89282d9c483dcb9e0ed7",
-    "url": "/figma-xray/static/js/main.5d447ce6.chunk.js"
+    "revision": "69952c9b3b6a170f5e83",
+    "url": "/figma-xray/static/js/main.8186edf1.chunk.js"
   },
   {
     "revision": "0a2324deea8275e6d8e7",
