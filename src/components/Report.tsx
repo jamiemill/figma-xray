@@ -8,7 +8,7 @@ import {
   ComponentWithStats,
   Path
 } from "../analysis/analysis";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 type ReportProps = {
   fileID: string | null;
@@ -29,34 +29,111 @@ type ComponentProps = {
   imageData: ImageData;
 };
 
+type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT";
+
 function Report({ fileID, fileData, summary, imageData }: ReportProps) {
+  const [currentTab, setCurrentTab] = useState<Tabs>("LIBRARY");
+
   if (fileData === null || summary === null || fileID === null) {
     return null;
   }
 
   return (
     <div>
-      <Section
-        name="Library Components"
-        subtitle="These are the components you've used from the team library."
-        components={summary.LIBRARY}
-        imageData={imageData}
-      />
-      <Section
-        name="Local Components"
-        subtitle="If any are not used, consider deleting them."
-        components={summary.DOCUMENT}
-        imageData={imageData}
-      />
-      <Section
-        name="Deleted Components"
-        subtitle="Undiscoverable components. Consider restoring the master, or replace the instance."
-        components={summary.DELETED_FROM_DOCUMENT}
-        imageData={imageData}
-      />
+      <Tabs>
+        <Tab
+          name="Library Components"
+          active={currentTab === "LIBRARY"}
+          count={summary.LIBRARY.length}
+          onClick={() => {
+            setCurrentTab("LIBRARY");
+          }}
+        />
+        <Tab
+          name="Local Components"
+          active={currentTab === "DOCUMENT"}
+          count={summary.DOCUMENT.length}
+          onClick={() => setCurrentTab("DOCUMENT")}
+        />
+        <Tab
+          name="Deleted Components"
+          active={currentTab === "DELETED_FROM_DOCUMENT"}
+          count={summary.DELETED_FROM_DOCUMENT.length}
+          onClick={() => setCurrentTab("DELETED_FROM_DOCUMENT")}
+        />
+      </Tabs>
+      {currentTab === "LIBRARY" && (
+        <Section
+          name="Library Components"
+          subtitle="These are the components you've used from the team library."
+          components={summary.LIBRARY}
+          imageData={imageData}
+        />
+      )}
+      {currentTab === "DOCUMENT" && (
+        <Section
+          name="Local Components"
+          subtitle="If any are not used, consider deleting them."
+          components={summary.DOCUMENT}
+          imageData={imageData}
+        />
+      )}
+      {currentTab === "DELETED_FROM_DOCUMENT" && (
+        <Section
+          name="Deleted Components"
+          subtitle="Undiscoverable components. Consider restoring the master, or replace the instance."
+          components={summary.DELETED_FROM_DOCUMENT}
+          imageData={imageData}
+        />
+      )}
     </div>
   );
 }
+
+const Tabs = styled.div`
+  display: flex;
+`;
+function Tab({
+  name,
+  count,
+  onClick,
+  active
+}: {
+  name: string;
+  count: number;
+  onClick: () => void;
+  active: boolean;
+}) {
+  return (
+    <TabContainer active={active} onClick={onClick}>
+      <TabTitle>{name}</TabTitle>
+      <TabSubtitle>{count}</TabSubtitle>
+    </TabContainer>
+  );
+}
+
+type TabContainerProps = {
+  active: boolean;
+};
+
+const TabContainer = styled.div<TabContainerProps>`
+  padding: 20px;
+  cursor: pointer;
+  border-radius: 0.5em;
+  margin-right: 10px;
+  background-color: #eee;
+  ${props =>
+    props.active &&
+    css`
+      background-color: #123;
+      color: white;
+    `}
+`;
+const TabTitle = styled.div`
+  font-weight: 900;
+  margin-bottom: 0.5em;
+`;
+const TabSubtitle = styled.div``;
 
 function Section({ name, subtitle, components, imageData }: SectionProps) {
   const count = components.length;
@@ -144,10 +221,7 @@ const SectionName = styled.h2`
 const SectionSubtitle = styled.p`
   margin: 10px 0 20px 0;
 `;
-const SectionContainer = styled.section`
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-`;
+const SectionContainer = styled.section``;
 const ComponentContainer = styled.div`
   margin-bottom: 20px;
   margin-right: 20px;
