@@ -92,7 +92,7 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
   );
 }
 
-function Section({ name, subtitle, components, imageData }: SectionProps) {
+function Section({ subtitle, components, imageData }: SectionProps) {
   const count = components.length;
   return (
     <SectionContainer>
@@ -154,7 +154,7 @@ function InstanceList({ instances }: { instances: Array<{ path: Path }> }) {
       {instances.map(
         (ins, i) =>
           ins.path && (
-            <div>
+            <div key={i}>
               <img src={pageIcon} alt="Figma Page Icon" />{" "}
               {ins.path.join(" > ")}
             </div>
@@ -170,10 +170,6 @@ const InstanceListContainer = styled.div`
   margin-left: 5px;
 `;
 
-const SectionName = styled.h2`
-  font-weight: 700;
-  margin: 10px 0 10px 0;
-`;
 const SectionSubtitle = styled.p`
   margin: 10px 0 20px 0;
 `;
