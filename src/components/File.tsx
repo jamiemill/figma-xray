@@ -10,7 +10,12 @@ type FileProps = {
   personalToken: string;
 };
 
-type LoadingStatus = "LOADING_DOCUMENT" | "LOADING_IMAGES" | "LINTING" | "NONE";
+type LoadingStatus =
+  | "LOADING_DOCUMENT"
+  | "LOADING_IMAGES"
+  | "ANALYSING"
+  | "LINTING"
+  | "NONE";
 
 export default function File({ fileID, personalToken }: FileProps) {
   const [fileData, setFileData] = useState<FileData>(null);
@@ -29,16 +34,21 @@ export default function File({ fileID, personalToken }: FileProps) {
       setFileData(fileData);
 
       if (fileData) {
-        const summary = componentSummary(fileData);
-        setSummary(summary);
+        setLoading("ANALYSING");
+        await nextTick(() => {
+          const summary = componentSummary(fileData);
+          setSummary(summary);
+        });
+
+        setLoading("LOADING_IMAGES");
+        const componentIds = Object.keys(fileData.components);
+        const images = await fetchImages(fileID, personalToken, componentIds);
+        setImageData(images);
+
+        setLoading("NONE");
+      } else {
+        setLoading("NONE");
       }
-
-      setLoading("LOADING_IMAGES");
-      const componentIds = fileData ? Object.keys(fileData.components) : [];
-      const images = await fetchImages(fileID, personalToken, componentIds);
-      setImageData(images);
-
-      setLoading("NONE");
     };
     loadEverything().catch(e => {
       setLoading("NONE");
@@ -77,6 +87,15 @@ export default function File({ fileID, personalToken }: FileProps) {
   );
 }
 
+function nextTick(fn: Function): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      fn();
+      resolve();
+    }, 0);
+  });
+}
+
 function LoadingStatus({
   loading,
   error
@@ -88,7 +107,8 @@ function LoadingStatus({
     NONE: null,
     LOADING_DOCUMENT: "Loading document...",
     LOADING_IMAGES: "Loading images...",
-    LINTING: "Linting..."
+    LINTING: "Linting...",
+    ANALYSING: "Analysing document..."
   };
   return <>{error ? error : map[loading]}</>;
 }
