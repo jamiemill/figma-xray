@@ -5,6 +5,7 @@ export type Images = {
   [key: string]: string;
 };
 export type ImageData = Images | null;
+export type StyleData = Figma.Style | null;
 
 export function fetchDocument(
   fileID: string,
@@ -45,6 +46,28 @@ export function fetchImages(
       .fileImages(fileID, { ids: nodeIDs, scale: 2, format: "png" })
       .then(({ data }) => {
         resolve(data.images);
+      })
+      .catch(reject);
+  });
+  return p;
+}
+
+export function fetchStyle(
+  key: string,
+  personalToken: string
+): Promise<StyleData> {
+  const p = new Promise<StyleData>((resolve, reject) => {
+    if (!key || !personalToken) {
+      reject();
+      return;
+    }
+    const client = Figma.Client({
+      personalAccessToken: personalToken
+    });
+    client.client
+      .get(`styles/${key}`)
+      .then(({ data }) => {
+        resolve(data);
       })
       .catch(reject);
   });
