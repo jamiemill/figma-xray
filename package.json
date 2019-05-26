@@ -13,7 +13,7 @@
     "@types/react-dom": "^16.8.4",
     "@types/styled-components": "^4.1.14",
     "dslint": "file:../dslint",
-    "figma-js": "^1.6.1",
+    "figma-js": "file:../figma-js",
     "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

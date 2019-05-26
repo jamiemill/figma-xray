@@ -1,4 +1,4 @@
-import { FileResponse, Node, Component, Instance } from "figma-js";
+import { FileResponse, Node, Instance, ComponentMetadata } from "figma-js";
 
 // export function getCommentFrame(comment, data) {
 //     const rootComment = isReply(comment) ?
@@ -119,7 +119,7 @@ export type ComponentReport = {
   [componentId: string]: {
     count: Number;
     path: Path;
-    component: Component;
+    component: ComponentMetadata;
   };
 };
 
