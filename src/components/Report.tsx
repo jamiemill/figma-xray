@@ -7,9 +7,9 @@ import pageIcon from "../icons/PageIcon.svg";
 
 import {
   ComponentSummary,
-  ComponentWithStats,
-  Path
-} from "../analysis/analysis";
+  ComponentWithStats
+} from "../analysis/componentSummary";
+import { Path } from "../analysis/query";
 import { Tabs, Tab } from "./Tabs";
 
 type ReportProps = {
