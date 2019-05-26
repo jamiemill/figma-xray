@@ -47,7 +47,7 @@ export default function findStyles(file: FileResponse): FoundStyles {
     fill: {},
     text: {},
     effect: {}
-    // also grid, text and background according to StyleKeyType def.
+    // also grid and background according to StyleKeyType def.
   };
 
   // TODO: this does extra work if the same style has been used multiple times, but I suppose its harmless.
@@ -71,6 +71,13 @@ export default function findStyles(file: FileResponse): FoundStyles {
       result.fill[id] = {
         meta: file.styles[id],
         definition: node.strokes
+      };
+    }
+    if (node.styles.effect) {
+      const id = node.styles.effect;
+      result.effect[id] = {
+        meta: file.styles[id],
+        definition: node.effects
       };
     }
   });
