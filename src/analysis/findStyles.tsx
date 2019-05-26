@@ -1,12 +1,4 @@
-import {
-  FileResponse,
-  Style,
-  TypeStyle,
-  Paint,
-  Effect,
-  Node,
-  Text
-} from "figma-js";
+import { FileResponse, Style, TypeStyle, Paint, Effect, Text } from "figma-js";
 import traverse from "traverse";
 
 type FoundTextStyle = {
@@ -83,18 +75,14 @@ export default function findStyles(file: FileResponse): FoundStyles {
     }
   });
 
-  const styleIDs = Object.keys(file.styles);
-  styleIDs.forEach(id => {
-    const styleMetadata = file.styles[id];
-    styleMetadata.styleType;
-  });
-
   return result;
 }
 
+export type InlineTextStyleNodes = ReadonlyArray<Text>;
+
 export function findTextNodesWithInlineStyles(
   file: FileResponse
-): ReadonlyArray<Text> {
+): InlineTextStyleNodes {
   return traverse(file.document).reduce(function(acc, node) {
     if (node) {
       if (node.type === "INSTANCE") {
