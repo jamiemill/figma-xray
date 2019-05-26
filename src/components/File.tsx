@@ -20,7 +20,6 @@ type LoadingStatus =
   | "LOADING_DOCUMENT"
   | "LOADING_IMAGES"
   | "ANALYSING"
-  | "LINTING"
   | "NONE";
 
 export default function File({ fileID, personalToken }: FileProps) {
