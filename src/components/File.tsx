@@ -7,6 +7,9 @@ import {
   componentSummary,
   ComponentSummary
 } from "../analysis/componentSummary";
+import findStyles, {
+  findTextNodesWithInlineStyles
+} from "../analysis/findStyles";
 
 type FileProps = {
   fileID: string;
@@ -41,6 +44,12 @@ export default function File({ fileID, personalToken }: FileProps) {
         await nextTick(() => {
           const summary = componentSummary(fileData);
           setSummary(summary);
+
+          const inlineTextStyleNodes = findTextNodesWithInlineStyles(fileData);
+          console.log(inlineTextStyleNodes);
+
+          const styles = findStyles(fileData);
+          console.log(styles);
         });
 
         setLoading("LOADING_IMAGES");
@@ -110,7 +119,6 @@ function LoadingStatus({
     NONE: null,
     LOADING_DOCUMENT: "Loading document...",
     LOADING_IMAGES: "Loading images...",
-    LINTING: "Linting...",
     ANALYSING: "Analysing document..."
   };
   return <>{error ? error : map[loading]}</>;
