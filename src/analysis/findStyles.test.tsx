@@ -1,5 +1,8 @@
 import simpleDocument from "../sample-data/simpleDocument";
-import findStyles, { FoundStyles } from "./findStyles";
+import findStyles, {
+  FoundStyles,
+  findTextNodesWithInlineStyles
+} from "./findStyles";
 
 it("finds styles", () => {
   const styles = findStyles(simpleDocument);
@@ -50,4 +53,10 @@ it("finds styles", () => {
   };
 
   expect(styles).toEqual(expected);
+});
+
+it("finds text nodes that use inline styles", () => {
+  const result = findTextNodesWithInlineStyles(simpleDocument);
+  expect(result.length).toEqual(8);
+  // console.log(result);
 });

@@ -1,4 +1,12 @@
-import { FileResponse, Style, TypeStyle, Paint, Effect, Node } from "figma-js";
+import {
+  FileResponse,
+  Style,
+  TypeStyle,
+  Paint,
+  Effect,
+  Node,
+  Text
+} from "figma-js";
 import traverse from "traverse";
 
 type FoundTextStyle = {
@@ -82,4 +90,23 @@ export default function findStyles(file: FileResponse): FoundStyles {
   });
 
   return result;
+}
+
+export function findTextNodesWithInlineStyles(
+  file: FileResponse
+): ReadonlyArray<Text> {
+  return traverse(file.document).reduce(function(acc, node) {
+    if (node) {
+      if (node.type === "INSTANCE") {
+        this.block();
+      } else if (
+        node.type === "TEXT" &&
+        (!hasKey(node, "styles") || !hasKey(node.styles, "text"))
+      ) {
+        acc.push(node);
+      }
+    }
+
+    return acc;
+  }, []);
 }
