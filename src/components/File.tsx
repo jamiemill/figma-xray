@@ -62,17 +62,24 @@ export default function File({ fileID, personalToken }: FileProps) {
           findTextNodesWithInlineStyles(fileData)
         );
         setInlineTextStyleNodes(inlineTextStyleNodes);
-        const inlineTextStyleNodeIDs = inlineTextStyleNodes.map(
+
+        const componentIdsForImages = Object.keys(fileData.components);
+        const inlineTextStyleNodeIDsForImages = inlineTextStyleNodes.map(
           node => node.node.id
         );
-
-        setLoading("LOADING_IMAGES");
-        const componentIds = Object.keys(fileData.components);
-        const images = await fetchImages(fileID, personalToken, [
-          ...componentIds,
-          ...inlineTextStyleNodeIDs
+        const idsForImages: Set<string> = new Set([
+          ...componentIdsForImages,
+          ...inlineTextStyleNodeIDsForImages
         ]);
-        setImageData(images);
+        if (idsForImages.size) {
+          setLoading("LOADING_IMAGES");
+          const images = await fetchImages(
+            fileID,
+            personalToken,
+            Array.from(idsForImages)
+          );
+          setImageData(images);
+        }
 
         setLoading("NONE");
       } else {
