@@ -26,11 +26,6 @@ type SectionProps = {
   sort: Sorts;
 };
 
-export type ComponentProps = {
-  component: ComponentWithStats;
-  imageData: ImageData;
-};
-
 type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT" | "INLINE_STYLES";
 type Sorts = "NAME" | "USAGE";
 

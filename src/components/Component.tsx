@@ -3,7 +3,13 @@ import styled from "styled-components";
 import componentIcon from "../icons/ComponentIcon.svg";
 import pageIcon from "../icons/PageIcon.svg";
 import { Path } from "../analysis/query";
-import { ComponentProps } from "./Report";
+import { ComponentWithStats } from "../analysis/componentSummary";
+import { ImageData } from "../api";
+
+export type ComponentProps = {
+  component: ComponentWithStats;
+  imageData: ImageData;
+};
 
 export function Component({ component, imageData }: ComponentProps) {
   const [expandInstances, setExpandInstances] = useState<boolean>(false);
