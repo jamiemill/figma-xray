@@ -10,6 +10,7 @@ import {
   ComponentWithStats
 } from "../analysis/componentSummary";
 import { Path } from "../analysis/query";
+import { InlineTextStyleNodes } from "../analysis/findStyles";
 import { Tabs, Tab } from "./Tabs";
 
 type ReportProps = {
@@ -17,10 +18,10 @@ type ReportProps = {
   fileData: FileData;
   summary: ComponentSummary | null;
   imageData: ImageData;
+  inlineTextStyleNodes: InlineTextStyleNodes | null;
 };
 
 type SectionProps = {
-  name: string;
   subtitle?: string;
   components: Array<ComponentWithStats>;
   imageData: ImageData;
@@ -32,10 +33,16 @@ type ComponentProps = {
   imageData: ImageData;
 };
 
-type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT";
+type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT" | "INLINE_STYLES";
 type Sorts = "NAME" | "USAGE";
 
-function Report({ fileID, fileData, summary, imageData }: ReportProps) {
+function Report({
+  fileID,
+  fileData,
+  summary,
+  imageData,
+  inlineTextStyleNodes
+}: ReportProps) {
   const [currentTab, setCurrentTab] = useState<Tabs>("LIBRARY");
   const [currentSort, setCurrentSort] = useState<Sorts>("USAGE");
 
@@ -66,24 +73,32 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
           count={summary.DELETED_FROM_DOCUMENT.length}
           onClick={() => setCurrentTab("DELETED_FROM_DOCUMENT")}
         />
-      </Tabs>
-
-      <Tabs>
         <Tab
-          name="Sort by Usage"
-          active={currentSort === "USAGE"}
-          onClick={() => setCurrentSort("USAGE")}
-        />
-        <Tab
-          name="Sort by Name"
-          active={currentSort === "NAME"}
-          onClick={() => setCurrentSort("NAME")}
+          name="Inline Styles"
+          active={currentTab === "INLINE_STYLES"}
+          count={inlineTextStyleNodes ? inlineTextStyleNodes.length : 0}
+          onClick={() => setCurrentTab("INLINE_STYLES")}
         />
       </Tabs>
+      {(currentTab === "LIBRARY" ||
+        currentTab === "DOCUMENT" ||
+        currentTab === "DELETED_FROM_DOCUMENT") && (
+        <Tabs>
+          <Tab
+            name="Sort by Usage"
+            active={currentSort === "USAGE"}
+            onClick={() => setCurrentSort("USAGE")}
+          />
+          <Tab
+            name="Sort by Name"
+            active={currentSort === "NAME"}
+            onClick={() => setCurrentSort("NAME")}
+          />
+        </Tabs>
+      )}
 
       {currentTab === "LIBRARY" && (
         <Section
-          name="Library Components"
           subtitle="These are the components you've used from the team library."
           components={summary.LIBRARY}
           imageData={imageData}
@@ -92,7 +107,6 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
       )}
       {currentTab === "DOCUMENT" && (
         <Section
-          name="Local Components"
           subtitle="If any are not used, consider deleting them."
           components={summary.DOCUMENT}
           imageData={imageData}
@@ -101,12 +115,23 @@ function Report({ fileID, fileData, summary, imageData }: ReportProps) {
       )}
       {currentTab === "DELETED_FROM_DOCUMENT" && (
         <Section
-          name="Deleted Components"
           subtitle="Undiscoverable components. Consider restoring the master, or replace the instance."
           components={summary.DELETED_FROM_DOCUMENT}
           imageData={imageData}
           sort={currentSort}
         />
+      )}
+      {currentTab === "INLINE_STYLES" && (
+        <SectionContainer>
+          <SectionSubtitle>
+            These text layers are not connected to any style. Consider defining
+            new styles or assigning to existing ones.
+          </SectionSubtitle>
+          {inlineTextStyleNodes &&
+            inlineTextStyleNodes.map(node => (
+              <div>{node.characters.substr(0, 50)}</div>
+            ))}
+        </SectionContainer>
       )}
     </div>
   );
@@ -200,6 +225,9 @@ const InstanceListContainer = styled.div`
 
 const SectionSubtitle = styled.p`
   margin: 10px 0 20px 0;
+  font-weight: 600;
+  padding: 10px;
+  border-left: 3px solid #123;
 `;
 const SectionContainer = styled.section``;
 const ComponentContainer = styled.div`

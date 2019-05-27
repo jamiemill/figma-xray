@@ -7,8 +7,9 @@ import {
   componentSummary,
   ComponentSummary
 } from "../analysis/componentSummary";
-import findStyles, {
-  findTextNodesWithInlineStyles
+import {
+  findTextNodesWithInlineStyles,
+  InlineTextStyleNodes
 } from "../analysis/findStyles";
 
 type FileProps = {
@@ -28,6 +29,10 @@ export default function File({ fileID, personalToken }: FileProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<LoadingStatus>("NONE");
   const [imageData, setImageData] = useState<ImageData>(null);
+  const [
+    inlineTextStyleNodes,
+    setInlineTextStyleNodes
+  ] = useState<InlineTextStyleNodes | null>(null);
 
   useEffect(() => {
     const loadEverything = async () => {
@@ -43,12 +48,10 @@ export default function File({ fileID, personalToken }: FileProps) {
         await nextTick(() => {
           const summary = componentSummary(fileData);
           setSummary(summary);
-
+        });
+        await nextTick(() => {
           const inlineTextStyleNodes = findTextNodesWithInlineStyles(fileData);
-          console.log(inlineTextStyleNodes);
-
-          const styles = findStyles(fileData);
-          console.log(styles);
+          setInlineTextStyleNodes(inlineTextStyleNodes);
         });
 
         setLoading("LOADING_IMAGES");
@@ -92,6 +95,7 @@ export default function File({ fileID, personalToken }: FileProps) {
           fileData={fileData}
           summary={summary}
           imageData={imageData}
+          inlineTextStyleNodes={inlineTextStyleNodes}
         />
       ) : null}
     </div>
