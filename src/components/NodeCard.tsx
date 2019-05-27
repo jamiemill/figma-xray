@@ -5,23 +5,51 @@ import pageIcon from "../icons/PageIcon.svg";
 import { Path } from "../analysis/query";
 import { ComponentWithStats } from "../analysis/componentSummary";
 import { ImageData } from "../api";
+import { Count } from "./Count";
+import { NodeWithXRayData } from "../analysis/findStyles";
 
 export type ComponentProps = {
   component: ComponentWithStats;
   imageData: ImageData;
 };
 
-export function Component({ component, imageData }: ComponentProps) {
+export type NodeCardProps = {
+  imageData: ImageData;
+  node: NodeWithXRayData;
+};
+
+export function NodeCard({ imageData, node }: NodeCardProps) {
+  return (
+    <NodeCardContainer>
+      <NodeCardPath>{node.path && node.path.join(" > ")}</NodeCardPath>
+      <NodeCardName>
+        <img src={componentIcon} alt="Figma Component Icon" /> {node.node.name}
+      </NodeCardName>
+      <NodeCardImageContainer>
+        {imageData && (
+          <img
+            srcSet={imageData[node.node.id] + " 2w"}
+            sizes="1px"
+            src={imageData[node.node.id]}
+            alt="Component Preview"
+          />
+        )}
+      </NodeCardImageContainer>
+    </NodeCardContainer>
+  );
+}
+
+export function ComponentNodeCard({ component, imageData }: ComponentProps) {
   const [expandInstances, setExpandInstances] = useState<boolean>(false);
   return (
-    <ComponentContainer>
-      <ComponentPath>
+    <NodeCardContainer>
+      <NodeCardPath>
         {component.path && component.path.join(" > ")}
-      </ComponentPath>
-      <ComponentName>
+      </NodeCardPath>
+      <NodeCardName>
         <img src={componentIcon} alt="Figma Component Icon" /> {component.name}
-      </ComponentName>
-      <ComponentImageContainer>
+      </NodeCardName>
+      <NodeCardImageContainer>
         {imageData && (
           <img
             srcSet={imageData[component.id] + " 2w"}
@@ -30,19 +58,21 @@ export function Component({ component, imageData }: ComponentProps) {
             alt="Component Preview"
           />
         )}
-      </ComponentImageContainer>
-      <ComponentCount onClick={() => setExpandInstances(!expandInstances)}>
+      </NodeCardImageContainer>
+      <NodeCardInstanceCount
+        onClick={() => setExpandInstances(!expandInstances)}
+      >
         <Count>{component.count}</Count>{" "}
         {component.count === 0
           ? "instances"
           : component.count === 1
           ? "instance..."
           : "instances..."}
-      </ComponentCount>
+      </NodeCardInstanceCount>
       {expandInstances ? (
         <InstanceList instances={component.instances} />
       ) : null}
-    </ComponentContainer>
+    </NodeCardContainer>
   );
 }
 function InstanceList({
@@ -66,12 +96,8 @@ function InstanceList({
     </InstanceListContainer>
   );
 }
-const InstanceListContainer = styled.div`
-  font-size: 85%;
-  margin-top: 10px;
-  margin-left: 5px;
-`;
-const ComponentContainer = styled.div`
+
+const NodeCardContainer = styled.div`
   margin-bottom: 20px;
   margin-right: 20px;
   padding: 20px;
@@ -81,7 +107,7 @@ const ComponentContainer = styled.div`
   flex-direction: column;
   box-shadow: rgba(25, 25, 25, 0.06) 0px 7px 15px 0px;
 `;
-const ComponentImageContainer = styled.div`
+const NodeCardImageContainer = styled.div`
   margin: 20px 0;
   flex-grow: 1;
   display: flex;
@@ -93,23 +119,22 @@ const ComponentImageContainer = styled.div`
     max-height: 200px;
   }
 `;
-const ComponentPath = styled.div`
+const NodeCardPath = styled.div`
   color: #999;
   font-size: 85%;
   margin-bottom: 4px;
 `;
-const ComponentName = styled.div`
+const NodeCardName = styled.div`
   font-weight: bold;
   color: #7b67fb;
 `;
-const ComponentCount = styled.div`
+const NodeCardInstanceCount = styled.div`
   cursor: pointer;
   font-size: 85%;
 `;
-const Count = styled.span`
-  display: inline-block;
-  border-radius: 1em;
-  background-color: #ddd;
-  font-weight: bold;
-  padding: 0.2em 0.5em;
+
+const InstanceListContainer = styled.div`
+  font-size: 85%;
+  margin-top: 10px;
+  margin-left: 5px;
 `;

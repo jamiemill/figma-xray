@@ -9,7 +9,7 @@ import {
 } from "../analysis/componentSummary";
 import { InlineTextStyleNodes } from "../analysis/findStyles";
 import { Tabs, Tab } from "./Tabs";
-import { Component } from "./Component";
+import { ComponentNodeCard } from "./NodeCard";
 
 type ReportProps = {
   fileID: string | null;
@@ -160,7 +160,7 @@ function Section({ subtitle, components, imageData, sort }: SectionProps) {
       <ComponentsList>
         {count > 0
           ? sorted.map(component => (
-              <Component
+              <ComponentNodeCard
                 key={component.id}
                 component={component}
                 imageData={imageData}

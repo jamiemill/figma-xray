@@ -86,12 +86,12 @@ export default function findStyles(file: FileResponse): FoundStyles {
   return result;
 }
 
-type InlineTextStyle = {
+export type NodeWithXRayData = {
   node: Text;
   path: Path;
 };
 
-export type InlineTextStyleNodes = Array<InlineTextStyle>;
+export type InlineTextStyleNodes = Array<NodeWithXRayData>;
 
 export function findTextNodesWithInlineStyles(
   file: FileResponse
