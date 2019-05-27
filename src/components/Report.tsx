@@ -129,7 +129,7 @@ function Report({
           </SectionSubtitle>
           {inlineTextStyleNodes &&
             inlineTextStyleNodes.map(node => (
-              <div>
+              <div key={node.node.id}>
                 {node.path &&
                   node.path.join(" > ") +
                     " > " +

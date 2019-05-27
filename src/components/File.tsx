@@ -11,6 +11,7 @@ import {
   findTextNodesWithInlineStyles,
   InlineTextStyleNodes
 } from "../analysis/findStyles";
+import nextTick from "../nextTick";
 
 type FileProps = {
   fileID: string;
@@ -45,14 +46,13 @@ export default function File({ fileID, personalToken }: FileProps) {
 
       if (fileData) {
         setLoading("ANALYSING");
-        await nextTick(() => {
-          const summary = componentSummary(fileData);
-          setSummary(summary);
-        });
-        await nextTick(() => {
-          const inlineTextStyleNodes = findTextNodesWithInlineStyles(fileData);
-          setInlineTextStyleNodes(inlineTextStyleNodes);
-        });
+        const summary = await nextTick(() => componentSummary(fileData));
+        setSummary(summary);
+
+        const inlineTextStyleNodes = await nextTick(() =>
+          findTextNodesWithInlineStyles(fileData)
+        );
+        setInlineTextStyleNodes(inlineTextStyleNodes);
 
         setLoading("LOADING_IMAGES");
         const componentIds = Object.keys(fileData.components);
@@ -100,15 +100,6 @@ export default function File({ fileID, personalToken }: FileProps) {
       ) : null}
     </div>
   );
-}
-
-function nextTick(fn: Function): Promise<void> {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      fn();
-      resolve();
-    }, 0);
-  });
 }
 
 function LoadingStatus({
