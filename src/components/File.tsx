@@ -53,10 +53,16 @@ export default function File({ fileID, personalToken }: FileProps) {
           findTextNodesWithInlineStyles(fileData)
         );
         setInlineTextStyleNodes(inlineTextStyleNodes);
+        const inlineTextStyleNodeIDs = inlineTextStyleNodes.map(
+          node => node.node.id
+        );
 
         setLoading("LOADING_IMAGES");
         const componentIds = Object.keys(fileData.components);
-        const images = await fetchImages(fileID, personalToken, componentIds);
+        const images = await fetchImages(fileID, personalToken, [
+          ...componentIds,
+          ...inlineTextStyleNodeIDs
+        ]);
         setImageData(images);
 
         setLoading("NONE");

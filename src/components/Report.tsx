@@ -130,12 +130,19 @@ function Report({
           {inlineTextStyleNodes &&
             inlineTextStyleNodes.map(node => (
               <div key={node.node.id}>
-                {node.path &&
-                  node.path.join(" > ") +
-                    " > " +
-                    node.node.name +
-                    ": " +
-                    node.node.characters.substr(0, 50)}
+                <div>
+                  {node.path &&
+                    node.path.join(" > ") + " > " + node.node.name + ": "}
+                </div>
+                {imageData && (
+                  <img
+                    srcSet={imageData[node.node.id] + " 2w"}
+                    sizes="1px"
+                    src={imageData[node.node.id]}
+                    alt={node.node.characters.substr(0, 50)}
+                    title={node.node.characters.substr(0, 50)}
+                  />
+                )}
               </div>
             ))}
         </SectionContainer>
