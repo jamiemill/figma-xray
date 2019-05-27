@@ -129,7 +129,14 @@ function Report({
           </SectionSubtitle>
           {inlineTextStyleNodes &&
             inlineTextStyleNodes.map(node => (
-              <div>{node.characters.substr(0, 50)}</div>
+              <div>
+                {node.path &&
+                  node.path.join(" > ") +
+                    " > " +
+                    node.node.name +
+                    ": " +
+                    node.node.characters.substr(0, 50)}
+              </div>
             ))}
         </SectionContainer>
       )}
