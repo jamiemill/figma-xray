@@ -23,9 +23,12 @@ export type NodeCardProps = {
 export function NodeCard({ imageData, node }: NodeCardProps) {
   return (
     <NodeCardContainer>
-      <NodeCardPath>{node.path && node.path.join(" ▸ ")}</NodeCardPath>
+      <NodeCardPath>
+        <PathDisplay path={node.path} />
+      </NodeCardPath>
       <NodeCardName type="TEXT">
-        <img src={textIcon} alt="Figma Text Icon" /> {node.node.name}
+        <img src={textIcon} alt="Figma Text Icon" />{" "}
+        {node.node.name.substr(0, 20)}
       </NodeCardName>
       <NodeCardImageContainer>
         {imageData && (
@@ -46,10 +49,11 @@ export function ComponentNodeCard({ component, imageData }: ComponentProps) {
   return (
     <NodeCardContainer>
       <NodeCardPath>
-        {component.path && component.path.join(" ▸ ")}
+        <PathDisplay path={component.path} />
       </NodeCardPath>
       <NodeCardName type="COMPONENT">
-        <img src={componentIcon} alt="Figma Component Icon" /> {component.name}
+        <img src={componentIcon} alt="Figma Component Icon" />{" "}
+        {component.name.substr(0, 20)}
       </NodeCardName>
       <NodeCardImageContainer>
         {imageData && (
@@ -86,17 +90,19 @@ function InstanceList({
 }) {
   return (
     <InstanceListContainer>
-      {instances.map(
-        (ins, i) =>
-          ins.path && (
-            <div key={i}>
-              <img src={pageIcon} alt="Figma Page Icon" />{" "}
-              {ins.path.join(" > ")}
-            </div>
-          )
-      )}
+      {instances.map((ins, i) => (
+        <PathDisplay key={i} path={ins.path} />
+      ))}
     </InstanceListContainer>
   );
+}
+
+function PathDisplay({ path }: { path: Path }) {
+  return path ? (
+    <div>
+      <img src={pageIcon} alt="Figma Page Icon" /> {path.join(" ▸ ")}
+    </div>
+  ) : null;
 }
 
 const NodeCardContainer = styled.div`
