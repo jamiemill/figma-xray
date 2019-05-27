@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/figma-xray/precache-manifest.1f6d20ded33e3d42b8b6f1e45b583b47.js"
+  "/figma-xray/precache-manifest.e5ca26616a313733db8c12b6a78ba454.js"
 );
 
 self.addEventListener('message', (event) => {
