@@ -122,13 +122,15 @@ function Report({
           </SectionSubtitle>
           <NodeCardGrid>
             {inlineTextStyleNodes &&
-              inlineTextStyleNodes.map(node => (
-                <NodeCard
-                  key={node.node.id}
-                  node={node}
-                  imageData={imageData}
-                />
-              ))}
+              (inlineTextStyleNodes.length > 0
+                ? inlineTextStyleNodes.map(node => (
+                    <NodeCard
+                      key={node.node.id}
+                      node={node}
+                      imageData={imageData}
+                    />
+                  ))
+                : "None.")}
           </NodeCardGrid>
         </SectionContainer>
       )}
