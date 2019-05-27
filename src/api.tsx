@@ -13,10 +13,6 @@ export function fetchDocument(
   personalToken: string
 ): Promise<FileData> {
   const p = new Promise<FileData>((resolve, reject) => {
-    if (!fileID || !personalToken) {
-      reject();
-      return;
-    }
     const client = Figma.Client({
       personalAccessToken: personalToken
     });
@@ -36,10 +32,6 @@ export function fetchImages(
   nodeIDs: Array<string>
 ): Promise<Images> {
   const p = new Promise<Images>((resolve, reject) => {
-    if (!fileID || !personalToken) {
-      reject();
-      return;
-    }
     const client = Figma.Client({
       personalAccessToken: personalToken
     });
@@ -58,10 +50,6 @@ export function fetchStyle(
   personalToken: string
 ): Promise<StyleData> {
   const p = new Promise<StyleData>((resolve, reject) => {
-    if (!key || !personalToken) {
-      reject();
-      return;
-    }
     const client = Figma.Client({
       personalAccessToken: personalToken
     });
@@ -80,10 +68,6 @@ export function fetchStyles(
   personalToken: string
 ): Promise<StylesData> {
   const p = new Promise<StylesData>((resolve, reject) => {
-    if (!teamID || !personalToken) {
-      reject();
-      return;
-    }
     const client = Figma.Client({
       personalAccessToken: personalToken
     });
