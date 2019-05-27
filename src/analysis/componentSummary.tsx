@@ -10,9 +10,6 @@ export type ComponentReport = {
   };
 };
 
-// Iterate through components and find all instances.
-// This one finds unused components unlike the one below so I favour this.
-
 export function componentReportFromComponents(
   documentResponse: FileResponse
 ): ComponentReport {
@@ -27,26 +24,6 @@ export function componentReportFromComponents(
   });
   return components;
 }
-
-// iterate through instances and build up a map of components with counts, path etc.
-// function componentReportFromInstances(documentResponse) {
-//     const allInstances = findAllInstances(documentResponse.document);
-//     const allComponents = documentResponse.components;
-
-//     return allInstances.reduce((prev, _) => {
-//         if (!prev[_.componentId]) {
-//             const component = allComponents[_.componentId];
-//             const componentPath = getPathOfNodeWithId(documentResponse.document, _.componentId);
-//             const meta = {
-//                 count: 0,
-//                 path: componentPath
-//             };
-//             prev[_.componentId] = Object.assign({}, component, meta);
-//         }
-//         prev[_.componentId].count++;
-//         return prev;
-//     }, {});
-// }
 
 export type ComponentWithStats = {
   id: string;
