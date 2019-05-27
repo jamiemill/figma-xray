@@ -23,7 +23,7 @@ export type NodeCardProps = {
 export function NodeCard({ imageData, node }: NodeCardProps) {
   return (
     <NodeCardContainer>
-      <NodeCardPath>{node.path && node.path.join(" > ")}</NodeCardPath>
+      <NodeCardPath>{node.path && node.path.join(" ▸ ")}</NodeCardPath>
       <NodeCardName type="TEXT">
         <img src={textIcon} alt="Figma Text Icon" /> {node.node.name}
       </NodeCardName>
@@ -46,7 +46,7 @@ export function ComponentNodeCard({ component, imageData }: ComponentProps) {
   return (
     <NodeCardContainer>
       <NodeCardPath>
-        {component.path && component.path.join(" > ")}
+        {component.path && component.path.join(" ▸ ")}
       </NodeCardPath>
       <NodeCardName type="COMPONENT">
         <img src={componentIcon} alt="Figma Component Icon" /> {component.name}
@@ -124,10 +124,11 @@ const NodeCardImageContainer = styled.div`
 const NodeCardPath = styled.div`
   color: ${lightGrey};
   font-size: 85%;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
 `;
 const NodeCardName = styled.div<{ type: string }>`
-  font-weight: bold;
+  /* font-weight: bold; */
+  color: ${lightGrey};
   ${props =>
     props.type === "COMPONENT" &&
     css`
@@ -143,4 +144,9 @@ const InstanceListContainer = styled.div`
   font-size: 85%;
   margin-top: 10px;
   margin-left: 5px;
+`;
+
+export const NodeCardGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
 `;

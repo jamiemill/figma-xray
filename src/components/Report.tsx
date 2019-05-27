@@ -9,7 +9,7 @@ import {
 } from "../analysis/componentSummary";
 import { InlineTextStyleNodes } from "../analysis/findStyles";
 import { Tabs, Tab } from "./Tabs";
-import { ComponentNodeCard, NodeCard } from "./NodeCard";
+import { ComponentNodeCard, NodeCard, NodeCardGrid } from "./NodeCard";
 
 type ReportProps = {
   fileID: string | null;
@@ -120,10 +120,16 @@ function Report({
             These text layers are not connected to any style. Consider defining
             new styles or assigning to existing ones.
           </SectionSubtitle>
-          {inlineTextStyleNodes &&
-            inlineTextStyleNodes.map(node => (
-              <NodeCard key={node.node.id} node={node} imageData={imageData} />
-            ))}
+          <NodeCardGrid>
+            {inlineTextStyleNodes &&
+              inlineTextStyleNodes.map(node => (
+                <NodeCard
+                  key={node.node.id}
+                  node={node}
+                  imageData={imageData}
+                />
+              ))}
+          </NodeCardGrid>
         </SectionContainer>
       )}
     </div>
@@ -143,7 +149,7 @@ function Section({ subtitle, components, imageData, sort }: SectionProps) {
   return (
     <SectionContainer>
       <SectionSubtitle>{subtitle}</SectionSubtitle>
-      <ComponentsList>
+      <NodeCardGrid>
         {count > 0
           ? sorted.map(component => (
               <ComponentNodeCard
@@ -153,7 +159,7 @@ function Section({ subtitle, components, imageData, sort }: SectionProps) {
               />
             ))
           : "None."}
-      </ComponentsList>
+      </NodeCardGrid>
     </SectionContainer>
   );
 }
@@ -165,9 +171,5 @@ const SectionSubtitle = styled.p`
   border-left: 3px solid #123;
 `;
 const SectionContainer = styled.section``;
-const ComponentsList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
 
 export default Report;
