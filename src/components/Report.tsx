@@ -9,7 +9,7 @@ import {
 } from "../analysis/componentSummary";
 import { InlineTextStyleNodes } from "../analysis/findStyles";
 import { Tabs, Tab } from "./Tabs";
-import { ComponentNodeCard } from "./NodeCard";
+import { ComponentNodeCard, NodeCard } from "./NodeCard";
 
 type ReportProps = {
   fileID: string | null;
@@ -122,21 +122,7 @@ function Report({
           </SectionSubtitle>
           {inlineTextStyleNodes &&
             inlineTextStyleNodes.map(node => (
-              <div key={node.node.id}>
-                <div>
-                  {node.path &&
-                    node.path.join(" > ") + " > " + node.node.name + ": "}
-                </div>
-                {imageData && (
-                  <img
-                    srcSet={imageData[node.node.id] + " 2w"}
-                    sizes="1px"
-                    src={imageData[node.node.id]}
-                    alt={node.node.characters.substr(0, 50)}
-                    title={node.node.characters.substr(0, 50)}
-                  />
-                )}
-              </div>
+              <NodeCard key={node.node.id} node={node} imageData={imageData} />
             ))}
         </SectionContainer>
       )}

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import componentIcon from "../icons/ComponentIcon.svg";
 import pageIcon from "../icons/PageIcon.svg";
+import textIcon from "../icons/TextIcon.svg";
 import { Path } from "../analysis/query";
 import { ComponentWithStats } from "../analysis/componentSummary";
 import { ImageData } from "../api";
 import { Count } from "./Count";
 import { NodeWithXRayData } from "../analysis/findStyles";
+import { lightGrey, figmaComponentPurple } from "../styles";
 
 export type ComponentProps = {
   component: ComponentWithStats;
@@ -22,8 +24,8 @@ export function NodeCard({ imageData, node }: NodeCardProps) {
   return (
     <NodeCardContainer>
       <NodeCardPath>{node.path && node.path.join(" > ")}</NodeCardPath>
-      <NodeCardName>
-        <img src={componentIcon} alt="Figma Component Icon" /> {node.node.name}
+      <NodeCardName type="TEXT">
+        <img src={textIcon} alt="Figma Text Icon" /> {node.node.name}
       </NodeCardName>
       <NodeCardImageContainer>
         {imageData && (
@@ -46,7 +48,7 @@ export function ComponentNodeCard({ component, imageData }: ComponentProps) {
       <NodeCardPath>
         {component.path && component.path.join(" > ")}
       </NodeCardPath>
-      <NodeCardName>
+      <NodeCardName type="COMPONENT">
         <img src={componentIcon} alt="Figma Component Icon" /> {component.name}
       </NodeCardName>
       <NodeCardImageContainer>
@@ -120,13 +122,17 @@ const NodeCardImageContainer = styled.div`
   }
 `;
 const NodeCardPath = styled.div`
-  color: #999;
+  color: ${lightGrey};
   font-size: 85%;
   margin-bottom: 4px;
 `;
-const NodeCardName = styled.div`
+const NodeCardName = styled.div<{ type: string }>`
   font-weight: bold;
-  color: #7b67fb;
+  ${props =>
+    props.type === "COMPONENT" &&
+    css`
+      color: ${figmaComponentPurple};
+    `}
 `;
 const NodeCardInstanceCount = styled.div`
   cursor: pointer;
