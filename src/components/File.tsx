@@ -36,6 +36,15 @@ export default function File({ fileID, personalToken }: FileProps) {
   ] = useState<InlineTextStyleNodes | null>(null);
 
   useEffect(() => {
+    if (fileData) {
+      window.document.title = "X-Ray: " + fileData.name;
+    }
+    return function() {
+      window.document.title = "X-Ray";
+    };
+  }, [fileData]);
+
+  useEffect(() => {
     const loadEverything = async () => {
       setLoading("LOADING_DOCUMENT");
       setFileData(null);
