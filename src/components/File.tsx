@@ -73,12 +73,18 @@ export default function File({ fileID, personalToken }: FileProps) {
         ]);
         if (idsForImages.size) {
           setLoading("LOADING_IMAGES");
-          const images = await fetchImages(
-            fileID,
-            personalToken,
-            Array.from(idsForImages)
-          );
-          setImageData(images);
+          const perPage = 50;
+          for (let n = 0; n < idsForImages.size; n += perPage) {
+            const images = await fetchImages(
+              fileID,
+              personalToken,
+              Array.from(idsForImages).slice(n, n + perPage)
+            );
+            setImageData(
+              (prev: ImageData): ImageData =>
+                prev ? { ...prev, ...images } : images
+            );
+          }
         }
 
         setLoading("NONE");
