@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/figma-xray/static/js/main.768c791c.chunk.js",
-    "main.js.map": "/figma-xray/static/js/main.768c791c.chunk.js.map",
+    "main.js": "/figma-xray/static/js/main.de7f4055.chunk.js",
+    "main.js.map": "/figma-xray/static/js/main.de7f4055.chunk.js.map",
     "runtime~main.js": "/figma-xray/static/js/runtime~main.7c3fcf9c.js",
     "runtime~main.js.map": "/figma-xray/static/js/runtime~main.7c3fcf9c.js.map",
-    "static/js/2.f4e52118.chunk.js": "/figma-xray/static/js/2.f4e52118.chunk.js",
-    "static/js/2.f4e52118.chunk.js.map": "/figma-xray/static/js/2.f4e52118.chunk.js.map",
+    "static/js/2.e78c49a8.chunk.js": "/figma-xray/static/js/2.e78c49a8.chunk.js",
+    "static/js/2.e78c49a8.chunk.js.map": "/figma-xray/static/js/2.e78c49a8.chunk.js.map",
     "index.html": "/figma-xray/index.html",
-    "precache-manifest.e5ca26616a313733db8c12b6a78ba454.js": "/figma-xray/precache-manifest.e5ca26616a313733db8c12b6a78ba454.js",
+    "precache-manifest.d375f8c151b0f89559ca964cf4562688.js": "/figma-xray/precache-manifest.d375f8c151b0f89559ca964cf4562688.js",
     "service-worker.js": "/figma-xray/service-worker.js",
     "static/media/ComponentIcon.svg": "/figma-xray/static/media/ComponentIcon.483685cf.svg",
     "static/media/PageIcon.svg": "/figma-xray/static/media/PageIcon.6e637937.svg",
