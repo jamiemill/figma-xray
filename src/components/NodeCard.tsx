@@ -30,16 +30,7 @@ export function NodeCard({ imageData, node }: NodeCardProps) {
         <img src={textIcon} alt="Figma Text Icon" />{" "}
         {node.node.name.substr(0, 20)}
       </NodeCardName>
-      <NodeCardImageContainer>
-        {imageData && (
-          <img
-            srcSet={imageData[node.node.id] + " 2w"}
-            sizes="1px"
-            src={imageData[node.node.id]}
-            alt="Component Preview"
-          />
-        )}
-      </NodeCardImageContainer>
+      <MaybeImage imageData={imageData} nodeID={node.node.id} />
     </NodeCardContainer>
   );
 }
@@ -55,16 +46,7 @@ export function ComponentNodeCard({ component, imageData }: ComponentProps) {
         <img src={componentIcon} alt="Figma Component Icon" />{" "}
         {component.name.substr(0, 20)}
       </NodeCardName>
-      <NodeCardImageContainer>
-        {imageData && (
-          <img
-            srcSet={imageData[component.id] + " 2w"}
-            sizes="1px"
-            src={imageData[component.id]}
-            alt="Component Preview"
-          />
-        )}
-      </NodeCardImageContainer>
+      <MaybeImage imageData={imageData} nodeID={component.id} />
       <NodeCardInstanceCount
         onClick={() => setExpandInstances(!expandInstances)}
       >
@@ -81,6 +63,30 @@ export function ComponentNodeCard({ component, imageData }: ComponentProps) {
     </NodeCardContainer>
   );
 }
+
+function MaybeImage({
+  imageData,
+  nodeID
+}: {
+  imageData: ImageData;
+  nodeID: string;
+}) {
+  return (
+    <NodeCardImageContainer>
+      {imageData && imageData[nodeID] ? (
+        <img
+          srcSet={imageData[nodeID] + " 2w"}
+          sizes="1px"
+          src={imageData[nodeID]}
+          alt="Node Preview"
+        />
+      ) : (
+        <Loading />
+      )}
+    </NodeCardImageContainer>
+  );
+}
+
 function InstanceList({
   instances
 }: {
@@ -155,4 +161,10 @@ const InstanceListContainer = styled.div`
 export const NodeCardGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
+`;
+
+const Loading = () => <LoadingStyle>Loading...</LoadingStyle>;
+
+const LoadingStyle = styled.div`
+  color: ${lightGrey};
 `;
