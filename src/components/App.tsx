@@ -4,6 +4,8 @@ import FileIDForm from "./FileIDForm";
 import File from "./File";
 import styled from "styled-components";
 
+import TestWorker from "../workers/test.worker";
+
 const Container = styled.div`
   padding: 20px;
 `;
@@ -23,6 +25,24 @@ function App() {
     window.onpopstate = function() {
       handleURLChange();
     };
+
+    const worker1 = new TestWorker();
+
+    worker1.postMessage("hello worker 1");
+    worker1.addEventListener("message", (event: any) => {
+      console.log("from worker 1", event);
+    });
+
+    const worker2 = new TestWorker();
+
+    worker2.postMessage("hello worker 2");
+    worker2.addEventListener("message", (event: any) => {
+      console.log("from worker 2", event);
+    });
+    setTimeout(() => {
+      worker1.terminate();
+      worker2.terminate();
+    }, 4000);
   }, []);
 
   function handleURLChange() {
