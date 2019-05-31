@@ -4,7 +4,7 @@ import FileIDForm from "./FileIDForm";
 import File from "./File";
 import styled from "styled-components";
 
-import TestWorker from "../workers/test.worker";
+import TestWorker from "../workers/test.worker.ts"; // seem to have to include .ts extension for wildcard module to be matched
 
 const Container = styled.div`
   padding: 20px;
