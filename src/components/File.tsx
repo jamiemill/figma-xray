@@ -4,13 +4,10 @@ import styled from "styled-components";
 import Report from "./Report";
 import { fetchDocument, FileData, ImageData, fetchImages } from "../api";
 import { ComponentSummary } from "../analysis/componentSummary";
-import {
-  findTextNodesWithInlineStyles,
-  InlineTextStyleNodes
-} from "../analysis/findStyles";
-import nextTick from "../nextTick";
+import { InlineTextStyleNodes } from "../analysis/findStyles";
 
 import ComponentSummaryWorker from "../workers/ComponentSummary.worker.ts";
+import InlineTextStyleWorker from "../workers/InlineTextStyle.worker.ts";
 
 type FileProps = {
   fileID: string;
@@ -60,7 +57,7 @@ export default function File({ fileID, personalToken }: FileProps) {
 
         console.time("ANALYSIS_COMPONENT_SUMMARY");
         const componentSummaryWorker = new ComponentSummaryWorker();
-        const summary: ComponentSummary = await promiseWork<ComponentSummary>(
+        const summary = await promiseWork<ComponentSummary>(
           componentSummaryWorker,
           fileData
         );
@@ -69,10 +66,13 @@ export default function File({ fileID, personalToken }: FileProps) {
         console.timeEnd("ANALYSIS_COMPONENT_SUMMARY");
 
         console.time("ANALYSIS_INLINE_STYLE");
-        const inlineTextStyleNodes = await nextTick(() =>
-          findTextNodesWithInlineStyles(fileData)
+        const inlineTextStyleWorker = new InlineTextStyleWorker();
+        const inlineTextStyleNodes = await promiseWork<InlineTextStyleNodes>(
+          inlineTextStyleWorker,
+          fileData
         );
         setInlineTextStyleNodes(inlineTextStyleNodes);
+        inlineTextStyleWorker.terminate();
         console.timeEnd("ANALYSIS_INLINE_STYLE");
 
         const componentIdsForImages = Object.keys(fileData.components);
