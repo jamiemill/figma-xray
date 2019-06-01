@@ -59,13 +59,13 @@ export default function File({ fileID, personalToken }: FileProps) {
         console.time("ANALYSIS");
 
         console.time("ANALYSIS_COMPONENT_SUMMARY");
-        const c = new ComponentSummaryWorker();
+        const componentSummaryWorker = new ComponentSummaryWorker();
         const summary: ComponentSummary = await promiseWork<ComponentSummary>(
-          c,
+          componentSummaryWorker,
           fileData
         );
         setSummary(summary);
-        c.terminate();
+        componentSummaryWorker.terminate();
         console.timeEnd("ANALYSIS_COMPONENT_SUMMARY");
 
         console.time("ANALYSIS_INLINE_STYLE");
