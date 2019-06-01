@@ -13,6 +13,8 @@ import {
 } from "../analysis/findStyles";
 import nextTick from "../nextTick";
 
+import ComponentSummaryWorker from "../workers/ComponentSummary.worker.ts";
+
 type FileProps = {
   fileID: string;
   personalToken: string;
@@ -57,6 +59,11 @@ export default function File({ fileID, personalToken }: FileProps) {
         setLoading("ANALYSING");
         const summary = await nextTick(() => componentSummary(fileData));
         setSummary(summary);
+
+        const c = new ComponentSummaryWorker();
+        const workerWork = await promiseWork(c, fileData);
+        console.log("Component summary from worker:", workerWork);
+        c.terminate();
 
         const inlineTextStyleNodes = await nextTick(() =>
           findTextNodesWithInlineStyles(fileData)
@@ -157,3 +164,12 @@ const DocumentNameLabel = styled.span`
 const DocumentLink = styled.a`
   color: inherit;
 `;
+
+function promiseWork<T>(worker: Worker, data: any): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    worker.addEventListener("message", e => {
+      resolve(e.data);
+    });
+    worker.postMessage(data);
+  });
+}
