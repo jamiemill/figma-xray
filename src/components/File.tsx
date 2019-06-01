@@ -3,10 +3,7 @@ import styled from "styled-components";
 
 import Report from "./Report";
 import { fetchDocument, FileData, ImageData, fetchImages } from "../api";
-import {
-  componentSummary,
-  ComponentSummary
-} from "../analysis/componentSummary";
+import { ComponentSummary } from "../analysis/componentSummary";
 import {
   findTextNodesWithInlineStyles,
   InlineTextStyleNodes
@@ -52,23 +49,31 @@ export default function File({ fileID, personalToken }: FileProps) {
       setFileData(null);
       setImageData(null);
       setError(null);
+      console.time("FETCH_DOCUMENT");
       const fileData = await fetchDocument(fileID, personalToken);
       setFileData(fileData);
+      console.timeEnd("FETCH_DOCUMENT");
 
       if (fileData) {
         setLoading("ANALYSING");
-        const summary = await nextTick(() => componentSummary(fileData));
-        setSummary(summary);
+        console.time("ANALYSIS");
 
+        console.time("ANALYSIS_COMPONENT_SUMMARY");
         const c = new ComponentSummaryWorker();
-        const workerWork = await promiseWork(c, fileData);
-        console.log("Component summary from worker:", workerWork);
+        const summary: ComponentSummary = await promiseWork<ComponentSummary>(
+          c,
+          fileData
+        );
+        setSummary(summary);
         c.terminate();
+        console.timeEnd("ANALYSIS_COMPONENT_SUMMARY");
 
+        console.time("ANALYSIS_INLINE_STYLE");
         const inlineTextStyleNodes = await nextTick(() =>
           findTextNodesWithInlineStyles(fileData)
         );
         setInlineTextStyleNodes(inlineTextStyleNodes);
+        console.timeEnd("ANALYSIS_INLINE_STYLE");
 
         const componentIdsForImages = Object.keys(fileData.components);
         const inlineTextStyleNodeIDsForImages = inlineTextStyleNodes.map(
@@ -78,8 +83,11 @@ export default function File({ fileID, personalToken }: FileProps) {
           ...componentIdsForImages,
           ...inlineTextStyleNodeIDsForImages
         ]);
+        console.timeEnd("ANALYSIS");
+
         if (idsForImages.size) {
           setLoading("LOADING_IMAGES");
+          console.time("LOADING_IMAGES");
           const perPage = 50;
           for (let n = 0; n < idsForImages.size; n += perPage) {
             const images = await fetchImages(
@@ -92,6 +100,7 @@ export default function File({ fileID, personalToken }: FileProps) {
                 prev ? { ...prev, ...images } : images
             );
           }
+          console.timeEnd("LOADING_IMAGES");
         }
 
         setLoading("NONE");
