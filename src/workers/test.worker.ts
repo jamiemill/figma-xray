@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-globals
 const ctx: Worker = self as any;
 
 ctx.postMessage({ foo: "foo" });
