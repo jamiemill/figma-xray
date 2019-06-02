@@ -5,8 +5,8 @@ export type Index = {
   paths: PathsIndex;
   instances: InstancesIndex;
 };
-type PathsIndex = { [nodeID: string]: PathElement[] };
-type InstancesIndex = { [componentID: string]: Instance[] };
+type PathsIndex = { [nodeID: string]: ReadonlyArray<Node> };
+type InstancesIndex = { [componentID: string]: Array<Instance> };
 
 /**
  * Build:
@@ -23,11 +23,7 @@ export function buildIndex(documentResponse: FileResponse): Index {
   return index;
 }
 
-function indexRecursion(
-  node: Node,
-  index: Index,
-  pathMemo: PathElement[]
-): Index {
+function indexRecursion(node: Node, index: Index, pathMemo: Node[]): Index {
   // Every node we visit gets a top-level entry in the paths index.
   index.paths[node.id] = pathMemo;
 
@@ -42,25 +38,9 @@ function indexRecursion(
   // if the node has children, add the current node to a temporary path memo,
   // and then recur this function for all children, but with the deeper path memo.
   if ("children" in node) {
-    const newPathMemo = pathMemo.concat([generatePathElement(node)]);
+    const newPathMemo = pathMemo.concat([node]);
     node.children.forEach(child => indexRecursion(child, index, newPathMemo));
   }
 
   return index;
-}
-
-type PathElement = { name: string; type: string; id: string };
-
-/**
- * Path elements describe a single element in a path of nodes.
- * We could just include a pointer to the real Node, but since
- * we're not interested in children, and for debugging purposes,
- * I'm just including the interesting attributes.
- */
-function generatePathElement(node: Node): PathElement {
-  return {
-    name: node.name,
-    type: node.type,
-    id: node.id
-  };
 }

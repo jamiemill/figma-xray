@@ -9,7 +9,9 @@ describe("indexing", () => {
   });
 
   it("can build a paths index", () => {
-    expect(index.paths["1:3"]).toEqual([
+    expect(
+      index.paths["1:3"].map(_ => ({ name: _.name, type: _.type, id: _.id }))
+    ).toEqual([
       {
         name: "Document",
         type: "DOCUMENT",
