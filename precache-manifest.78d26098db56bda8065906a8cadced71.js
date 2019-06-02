@@ -1,14 +1,14 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c51ea6d736e90b0cf946b2afe8c89682",
-    "url": "/figma-xray/0478b12a33042093fa1a.worker.js"
+    "revision": "d5e6c18d38930e7bab8cc187cabf640a",
+    "url": "/figma-xray/025f65461b7222f14529.worker.js"
   },
   {
-    "revision": "85fd2d4016f6ac6e043a055bc5e7be5e",
-    "url": "/figma-xray/65a162d46459c0c96bd6.worker.js"
+    "revision": "1df5a0a241eda2e7573ec67184dac927",
+    "url": "/figma-xray/384cce094c03a3146f87.worker.js"
   },
   {
-    "revision": "e85c8b9548b81e64c849b12d74ef00d7",
+    "revision": "29a79b6451ef74b78f086aeeb8474dad",
     "url": "/figma-xray/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/figma-xray/static/js/2.503e4799.chunk.js"
   },
   {
-    "revision": "04233a1da7760cd82638",
-    "url": "/figma-xray/static/js/main.bc338d36.chunk.js"
+    "revision": "e0c8a6105e920a591e86",
+    "url": "/figma-xray/static/js/main.d8265c9b.chunk.js"
   },
   {
     "revision": "e8230b4cd902dd8789d1",
