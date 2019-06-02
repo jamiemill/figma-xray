@@ -5,7 +5,7 @@ export type Index = {
   paths: PathsIndex;
   instances: InstancesIndex;
 };
-type PathsIndex = { [nodeID: string]: ReadonlyArray<Node> };
+type PathsIndex = { [nodeID: string]: Array<Node> };
 type InstancesIndex = { [componentID: string]: Array<Instance> };
 
 /**
@@ -15,9 +15,14 @@ type InstancesIndex = { [componentID: string]: Array<Instance> };
  */
 
 export function buildIndex(documentResponse: FileResponse): Index {
+  const allComponentKeys: InstancesIndex = {};
+  Object.keys(documentResponse.components).forEach(k => {
+    allComponentKeys[k] = [];
+  });
+
   const emptyIndex = {
     paths: {},
-    instances: {}
+    instances: allComponentKeys
   };
   const index = indexRecursion(documentResponse.document, emptyIndex, []);
   return index;

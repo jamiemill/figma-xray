@@ -31,15 +31,25 @@ describe("indexing", () => {
   });
 
   it("can built an instances index", () => {
-    expect(Object.keys(index.instances)).toEqual(["4:4", "14:15", "28:2"]);
+    expect(Object.keys(index.instances)).toEqual([
+      "4:4",
+      "14:15",
+      "17:3",
+      "17:6",
+      "28:2",
+      "15:9"
+    ]);
 
     expect(index.instances["4:4"].map(_ => _.name)).toEqual(["Default"]);
     expect(index.instances["14:15"].map(_ => _.name)).toEqual([
       "Secondary",
       "Another Secondary"
     ]);
+    expect(index.instances["17:3"].map(_ => _.name)).toEqual([]);
+    expect(index.instances["17:6"].map(_ => _.name)).toEqual([]);
     expect(index.instances["28:2"].map(_ => _.name)).toEqual([
       "OnlyUsedInAnotherComponent"
     ]);
+    expect(index.instances["15:9"].map(_ => _.name)).toEqual([]);
   });
 });
