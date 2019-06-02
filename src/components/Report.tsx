@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, SyntheticEvent } from "react";
 import styled from "styled-components";
 
 import { FileData, ImageData } from "../api";
@@ -122,24 +122,10 @@ function Report({
         />
       )}
       {currentTab === "INLINE_STYLES" && (
-        <SectionContainer>
-          <SectionSubtitle>
-            These text layers are not connected to any style. Consider defining
-            new styles or assigning to existing ones.
-          </SectionSubtitle>
-          <NodeCardGrid>
-            {inlineTextStyleNodes &&
-              (inlineTextStyleNodes.length > 0
-                ? inlineTextStyleNodes.map(node => (
-                    <NodeCard
-                      key={node.node.id}
-                      node={node}
-                      imageData={imageData}
-                    />
-                  ))
-                : "None.")}
-          </NodeCardGrid>
-        </SectionContainer>
+        <InlineStyleSection
+          inlineTextStyleNodes={inlineTextStyleNodes}
+          imageData={imageData}
+        />
       )}
     </div>
   );
@@ -152,6 +138,37 @@ const sorters = {
     a.name.localeCompare(b.name)
 };
 
+type InlineStyleSectionProps = {
+  imageData: ImageData;
+  inlineTextStyleNodes: InlineTextStyleNodes | null;
+};
+
+function InlineStyleSection({
+  inlineTextStyleNodes,
+  imageData
+}: InlineStyleSectionProps) {
+  return (
+    <SectionContainer>
+      <SectionSubtitle>
+        These text layers are not connected to any style. Consider defining new
+        styles or assigning to existing ones.
+      </SectionSubtitle>
+      <NodeCardGrid>
+        {inlineTextStyleNodes &&
+          (inlineTextStyleNodes.length > 0
+            ? inlineTextStyleNodes.map(node => (
+                <NodeCard
+                  key={node.node.id}
+                  node={node}
+                  imageData={imageData}
+                />
+              ))
+            : "None.")}
+      </NodeCardGrid>
+    </SectionContainer>
+  );
+}
+
 function Section({
   subtitle,
   components,
@@ -161,24 +178,52 @@ function Section({
 }: SectionProps) {
   const count = components.length;
   const sorted = components.slice(0).sort(sorters[sort]);
+
+  const [page, setPage] = useState<number>(1);
+  const perPage = 50;
+  const showCount = page * perPage;
+  const morePages = showCount < count;
+
   return (
     <SectionContainer>
       <SectionSubtitle>{subtitle}</SectionSubtitle>
       <NodeCardGrid>
         {count > 0
-          ? sorted.map(component => (
-              <ComponentNodeCard
-                key={component.id}
-                component={component}
-                imageData={imageData}
-                index={index}
-              />
-            ))
+          ? sorted
+              .slice(0, showCount)
+              .map(component => (
+                <ComponentNodeCard
+                  key={component.id}
+                  component={component}
+                  imageData={imageData}
+                  index={index}
+                />
+              ))
           : "None."}
       </NodeCardGrid>
+      {morePages && (
+        <MoreLink
+          href="#"
+          onClick={e => {
+            e.preventDefault();
+            setPage(page + 1);
+          }}
+        >
+          Show more
+        </MoreLink>
+      )}
     </SectionContainer>
   );
 }
+
+const MoreLink = styled.a`
+  display: inline-block;
+  padding: 20px;
+  background-color: #123;
+  color: white;
+  border-radius: 3px;
+  font-weight: bold;
+`;
 
 const SectionSubtitle = styled.p`
   margin: 10px 0 20px 0;
