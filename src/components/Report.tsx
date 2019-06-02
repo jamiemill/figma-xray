@@ -11,6 +11,7 @@ import { InlineTextStyleNodes } from "../analysis/findStyles";
 import { Tabs, Tab } from "./Tabs";
 import { ComponentNodeCard, NodeCard, NodeCardGrid } from "./NodeCard";
 import { Index } from "../analysis/indexBuilder";
+import ImageManager from "../ImageManager";
 
 type ReportProps = {
   fileID: string | null;
@@ -19,6 +20,7 @@ type ReportProps = {
   imageData: ImageData;
   inlineTextStyleNodes: InlineTextStyleNodes | null;
   index: Index;
+  imageManager: ImageManager;
 };
 
 type SectionProps = {
@@ -27,6 +29,7 @@ type SectionProps = {
   imageData: ImageData;
   sort: Sorts;
   index: Index;
+  imageManager: ImageManager;
 };
 
 type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT" | "INLINE_STYLES";
@@ -38,7 +41,8 @@ function Report({
   summary,
   imageData,
   inlineTextStyleNodes,
-  index
+  index,
+  imageManager
 }: ReportProps) {
   const [currentTab, setCurrentTab] = useState<Tabs>("LIBRARY");
   const [currentSort, setCurrentSort] = useState<Sorts>("USAGE");
@@ -99,6 +103,7 @@ function Report({
           subtitle="These are the components you've used from the team library."
           components={summary.LIBRARY}
           imageData={imageData}
+          imageManager={imageManager}
           sort={currentSort}
           index={index}
         />
@@ -108,6 +113,7 @@ function Report({
           subtitle="If any are not used, consider deleting them."
           components={summary.DOCUMENT}
           imageData={imageData}
+          imageManager={imageManager}
           sort={currentSort}
           index={index}
         />
@@ -117,6 +123,7 @@ function Report({
           subtitle="Undiscoverable components. Consider restoring the master, or replace the instance."
           components={summary.DELETED_FROM_DOCUMENT}
           imageData={imageData}
+          imageManager={imageManager}
           sort={currentSort}
           index={index}
         />
@@ -126,6 +133,7 @@ function Report({
           <InlineStyleSection
             inlineTextStyleNodes={inlineTextStyleNodes}
             imageData={imageData}
+            imageManager={imageManager}
           />
         ) : (
           "Loading..."
@@ -144,11 +152,13 @@ const sorters = {
 type InlineStyleSectionProps = {
   imageData: ImageData;
   inlineTextStyleNodes: InlineTextStyleNodes;
+  imageManager: ImageManager;
 };
 
 function InlineStyleSection({
   inlineTextStyleNodes,
-  imageData
+  imageData,
+  imageManager
 }: InlineStyleSectionProps) {
   const count = inlineTextStyleNodes.length;
   const [showCount, hasMorePages, nextPage] = usePagination(count);
@@ -168,6 +178,7 @@ function InlineStyleSection({
                   key={node.node.id}
                   node={node}
                   imageData={imageData}
+                  imageManager={imageManager}
                 />
               ))
           : "None."}
@@ -200,7 +211,8 @@ function Section({
   components,
   imageData,
   sort,
-  index
+  index,
+  imageManager
 }: SectionProps) {
   const count = components.length;
   const sorted = components.slice(0).sort(sorters[sort]);
@@ -220,6 +232,7 @@ function Section({
                   component={component}
                   imageData={imageData}
                   index={index}
+                  imageManager={imageManager}
                 />
               ))
           : "None."}

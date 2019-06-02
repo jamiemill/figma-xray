@@ -9,6 +9,7 @@ import { buildIndex, Index } from "../analysis/indexBuilder";
 
 import ComponentSummaryWorker from "../workers/ComponentSummary.worker.ts";
 import InlineTextStyleWorker from "../workers/InlineTextStyle.worker.ts";
+import ImageManager from "../ImageManager";
 
 type FileProps = {
   fileID: string;
@@ -32,6 +33,9 @@ export default function File({ fileID, personalToken }: FileProps) {
     inlineTextStyleNodes,
     setInlineTextStyleNodes
   ] = useState<InlineTextStyleNodes | null>(null);
+  const [imageManager, setImageManager] = useState<ImageManager>(
+    () => new ImageManager({ personalToken, fileID })
+  );
 
   useEffect(() => {
     if (fileData) {
@@ -82,6 +86,9 @@ export default function File({ fileID, personalToken }: FileProps) {
         inlineTextStyleWorker.terminate();
         console.timeEnd("ANALYSIS_INLINE_STYLE");
 
+        console.timeEnd("ANALYSIS");
+
+        /*
         const componentIdsForImages = Object.keys(fileData.components);
         const inlineTextStyleNodeIDsForImages = inlineTextStyleNodes.map(
           node => node.node.id
@@ -90,7 +97,6 @@ export default function File({ fileID, personalToken }: FileProps) {
           ...componentIdsForImages,
           ...inlineTextStyleNodeIDsForImages
         ]);
-        console.timeEnd("ANALYSIS");
 
         if (idsForImages.size) {
           setLoading("LOADING_IMAGES");
@@ -109,6 +115,7 @@ export default function File({ fileID, personalToken }: FileProps) {
           }
           console.timeEnd("LOADING_IMAGES");
         }
+        */
 
         setLoading("NONE");
       } else {
@@ -148,6 +155,7 @@ export default function File({ fileID, personalToken }: FileProps) {
           imageData={imageData}
           inlineTextStyleNodes={inlineTextStyleNodes}
           index={index}
+          imageManager={imageManager}
         />
       ) : null}
     </div>

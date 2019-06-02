@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import componentIcon from "../icons/ComponentIcon.svg";
 import pageIcon from "../icons/PageIcon.svg";
@@ -7,25 +7,28 @@ import {
   ComponentWithStats,
   MaybeNodePath
 } from "../analysis/componentSummary";
-import { ImageData } from "../api";
+import { ImageData, fetchImages } from "../api";
 import { Count } from "./Count";
 import { NodeWithXRayData } from "../analysis/findStyles";
 import { lightGrey, figmaComponentPurple } from "../styles";
 import { Instance } from "figma-js";
 import { Index } from "../analysis/indexBuilder";
+import ImageManager from "../ImageManager";
 
 export type ComponentProps = {
   component: ComponentWithStats;
   imageData: ImageData;
+  imageManager: ImageManager;
   index: Index;
 };
 
 export type NodeCardProps = {
   imageData: ImageData;
   node: NodeWithXRayData;
+  imageManager: ImageManager;
 };
 
-export function NodeCard({ imageData, node }: NodeCardProps) {
+export function NodeCard({ imageData, node, imageManager }: NodeCardProps) {
   return (
     <NodeCardContainer>
       <NodeCardPath>
@@ -35,7 +38,7 @@ export function NodeCard({ imageData, node }: NodeCardProps) {
         <img src={textIcon} alt="Figma Text Icon" />{" "}
         {node.node.name.substr(0, 20)}
       </NodeCardName>
-      <MaybeImage imageData={imageData} nodeID={node.node.id} />
+      <LazyImage imageManager={imageManager} nodeID={node.node.id} />
     </NodeCardContainer>
   );
 }
@@ -43,6 +46,7 @@ export function NodeCard({ imageData, node }: NodeCardProps) {
 export function ComponentNodeCard({
   component,
   imageData,
+  imageManager,
   index
 }: ComponentProps) {
   const [expandInstances, setExpandInstances] = useState<boolean>(false);
@@ -55,7 +59,7 @@ export function ComponentNodeCard({
         <img src={componentIcon} alt="Figma Component Icon" />{" "}
         {component.name.substr(0, 20)}
       </NodeCardName>
-      <MaybeImage imageData={imageData} nodeID={component.id} />
+      <LazyImage imageManager={imageManager} nodeID={component.id} />
       <NodeCardInstanceCount
         onClick={() => setExpandInstances(!expandInstances)}
       >
@@ -89,6 +93,31 @@ function MaybeImage({
           src={imageData[nodeID]}
           alt="Node Preview"
         />
+      ) : (
+        <Loading />
+      )}
+    </NodeCardImageContainer>
+  );
+}
+
+function LazyImage({
+  nodeID,
+  imageManager
+}: {
+  nodeID: string;
+  imageManager: ImageManager;
+}) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    (async () => {
+      const url = await imageManager.getPreview(nodeID);
+      setUrl(url);
+    })();
+  }, [nodeID]);
+  return (
+    <NodeCardImageContainer>
+      {url ? (
+        <img srcSet={url + " 2w"} sizes="1px" src={url} alt="Node Preview" />
       ) : (
         <Loading />
       )}
