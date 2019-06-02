@@ -4,7 +4,6 @@ export type FileData = Figma.FileResponse | null;
 export type Images = {
   [key: string]: string;
 };
-export type ImageData = Images | null;
 export type StyleData = any;
 export type StylesData = any;
 

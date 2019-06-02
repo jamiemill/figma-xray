@@ -1,7 +1,7 @@
 import React, { useState, SyntheticEvent } from "react";
 import styled from "styled-components";
 
-import { FileData, ImageData } from "../api";
+import { FileData } from "../api";
 
 import {
   ComponentSummary,
@@ -17,7 +17,6 @@ type ReportProps = {
   fileID: string | null;
   fileData: FileData;
   summary: ComponentSummary | null;
-  imageData: ImageData;
   inlineTextStyleNodes: InlineTextStyleNodes | null;
   index: Index;
   imageManager: ImageManager;
@@ -26,7 +25,6 @@ type ReportProps = {
 type SectionProps = {
   subtitle?: string;
   components: Array<ComponentWithStats>;
-  imageData: ImageData;
   sort: Sorts;
   index: Index;
   imageManager: ImageManager;
@@ -39,7 +37,6 @@ function Report({
   fileID,
   fileData,
   summary,
-  imageData,
   inlineTextStyleNodes,
   index,
   imageManager
@@ -102,7 +99,6 @@ function Report({
         <Section
           subtitle="These are the components you've used from the team library."
           components={summary.LIBRARY}
-          imageData={imageData}
           imageManager={imageManager}
           sort={currentSort}
           index={index}
@@ -112,7 +108,6 @@ function Report({
         <Section
           subtitle="If any are not used, consider deleting them."
           components={summary.DOCUMENT}
-          imageData={imageData}
           imageManager={imageManager}
           sort={currentSort}
           index={index}
@@ -122,7 +117,6 @@ function Report({
         <Section
           subtitle="Undiscoverable components. Consider restoring the master, or replace the instance."
           components={summary.DELETED_FROM_DOCUMENT}
-          imageData={imageData}
           imageManager={imageManager}
           sort={currentSort}
           index={index}
@@ -132,7 +126,6 @@ function Report({
         (inlineTextStyleNodes ? (
           <InlineStyleSection
             inlineTextStyleNodes={inlineTextStyleNodes}
-            imageData={imageData}
             imageManager={imageManager}
           />
         ) : (
@@ -150,14 +143,12 @@ const sorters = {
 };
 
 type InlineStyleSectionProps = {
-  imageData: ImageData;
   inlineTextStyleNodes: InlineTextStyleNodes;
   imageManager: ImageManager;
 };
 
 function InlineStyleSection({
   inlineTextStyleNodes,
-  imageData,
   imageManager
 }: InlineStyleSectionProps) {
   const count = inlineTextStyleNodes.length;
@@ -177,7 +168,6 @@ function InlineStyleSection({
                 <NodeCard
                   key={node.node.id}
                   node={node}
-                  imageData={imageData}
                   imageManager={imageManager}
                 />
               ))
@@ -209,7 +199,6 @@ function usePagination(
 function Section({
   subtitle,
   components,
-  imageData,
   sort,
   index,
   imageManager
@@ -230,7 +219,6 @@ function Section({
                 <ComponentNodeCard
                   key={component.id}
                   component={component}
-                  imageData={imageData}
                   index={index}
                   imageManager={imageManager}
                 />

@@ -7,7 +7,6 @@ import {
   ComponentWithStats,
   MaybeNodePath
 } from "../analysis/componentSummary";
-import { ImageData, fetchImages } from "../api";
 import { Count } from "./Count";
 import { NodeWithXRayData } from "../analysis/findStyles";
 import { lightGrey, figmaComponentPurple } from "../styles";
@@ -17,18 +16,16 @@ import ImageManager from "../ImageManager";
 
 export type ComponentProps = {
   component: ComponentWithStats;
-  imageData: ImageData;
   imageManager: ImageManager;
   index: Index;
 };
 
 export type NodeCardProps = {
-  imageData: ImageData;
   node: NodeWithXRayData;
   imageManager: ImageManager;
 };
 
-export function NodeCard({ imageData, node, imageManager }: NodeCardProps) {
+export function NodeCard({ node, imageManager }: NodeCardProps) {
   return (
     <NodeCardContainer>
       <NodeCardPath>
@@ -45,7 +42,6 @@ export function NodeCard({ imageData, node, imageManager }: NodeCardProps) {
 
 export function ComponentNodeCard({
   component,
-  imageData,
   imageManager,
   index
 }: ComponentProps) {
@@ -77,29 +73,6 @@ export function ComponentNodeCard({
   );
 }
 
-function MaybeImage({
-  imageData,
-  nodeID
-}: {
-  imageData: ImageData;
-  nodeID: string;
-}) {
-  return (
-    <NodeCardImageContainer>
-      {imageData && imageData[nodeID] ? (
-        <img
-          srcSet={imageData[nodeID] + " 2w"}
-          sizes="1px"
-          src={imageData[nodeID]}
-          alt="Node Preview"
-        />
-      ) : (
-        <Loading />
-      )}
-    </NodeCardImageContainer>
-  );
-}
-
 function LazyImage({
   nodeID,
   imageManager
@@ -113,7 +86,7 @@ function LazyImage({
       const url = await imageManager.getPreview(nodeID);
       setUrl(url);
     })();
-  }, [nodeID]);
+  }, [nodeID, imageManager]);
   return (
     <NodeCardImageContainer>
       {url ? (
