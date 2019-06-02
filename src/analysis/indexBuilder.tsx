@@ -24,11 +24,15 @@ export function buildIndex(documentResponse: FileResponse): Index {
     paths: {},
     instances: allComponentKeys
   };
-  const index = indexRecursion(documentResponse.document, emptyIndex, []);
+  const index = indexRecursion(documentResponse.document, emptyIndex);
   return index;
 }
 
-function indexRecursion(node: Node, index: Index, pathMemo: Node[]): Index {
+function indexRecursion(
+  node: Node,
+  index: Index,
+  pathMemo: Node[] = []
+): Index {
   // Every node we visit gets a top-level entry in the paths index.
   index.paths[node.id] = pathMemo;
 
