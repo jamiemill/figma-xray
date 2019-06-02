@@ -121,12 +121,15 @@ function Report({
           index={index}
         />
       )}
-      {currentTab === "INLINE_STYLES" && (
-        <InlineStyleSection
-          inlineTextStyleNodes={inlineTextStyleNodes}
-          imageData={imageData}
-        />
-      )}
+      {currentTab === "INLINE_STYLES" &&
+        (inlineTextStyleNodes ? (
+          <InlineStyleSection
+            inlineTextStyleNodes={inlineTextStyleNodes}
+            imageData={imageData}
+          />
+        ) : (
+          "Loading..."
+        ))}
     </div>
   );
 }
@@ -140,13 +143,16 @@ const sorters = {
 
 type InlineStyleSectionProps = {
   imageData: ImageData;
-  inlineTextStyleNodes: InlineTextStyleNodes | null;
+  inlineTextStyleNodes: InlineTextStyleNodes;
 };
 
 function InlineStyleSection({
   inlineTextStyleNodes,
   imageData
 }: InlineStyleSectionProps) {
+  const count = inlineTextStyleNodes.length;
+  const [showCount, hasMorePages, nextPage] = usePagination(count);
+
   return (
     <SectionContainer>
       <SectionSubtitle>
@@ -154,19 +160,39 @@ function InlineStyleSection({
         styles or assigning to existing ones.
       </SectionSubtitle>
       <NodeCardGrid>
-        {inlineTextStyleNodes &&
-          (inlineTextStyleNodes.length > 0
-            ? inlineTextStyleNodes.map(node => (
+        {count > 0
+          ? inlineTextStyleNodes
+              .slice(0, showCount)
+              .map(node => (
                 <NodeCard
                   key={node.node.id}
                   node={node}
                   imageData={imageData}
                 />
               ))
-            : "None.")}
+          : "None."}
       </NodeCardGrid>
+      {hasMorePages && (
+        <MoreLink href="#" onClick={nextPage}>
+          Show more
+        </MoreLink>
+      )}
     </SectionContainer>
   );
+}
+
+function usePagination(
+  fullCount: number,
+  perPage: number = 50
+): [number, boolean, (e: SyntheticEvent) => void] {
+  const [page, setPage] = useState<number>(1);
+  const showCount: number = page * perPage;
+  const hasMorePages: boolean = showCount < fullCount;
+  const nextPage = (e: SyntheticEvent): void => {
+    e.preventDefault();
+    setPage(page + 1);
+  };
+  return [showCount, hasMorePages, nextPage];
 }
 
 function Section({
@@ -179,10 +205,7 @@ function Section({
   const count = components.length;
   const sorted = components.slice(0).sort(sorters[sort]);
 
-  const [page, setPage] = useState<number>(1);
-  const perPage = 50;
-  const showCount = page * perPage;
-  const morePages = showCount < count;
+  const [showCount, hasMorePages, nextPage] = usePagination(count);
 
   return (
     <SectionContainer>
@@ -201,14 +224,8 @@ function Section({
               ))
           : "None."}
       </NodeCardGrid>
-      {morePages && (
-        <MoreLink
-          href="#"
-          onClick={e => {
-            e.preventDefault();
-            setPage(page + 1);
-          }}
-        >
+      {hasMorePages && (
+        <MoreLink href="#" onClick={nextPage}>
           Show more
         </MoreLink>
       )}
@@ -217,12 +234,14 @@ function Section({
 }
 
 const MoreLink = styled.a`
-  display: inline-block;
+  display: block;
   padding: 20px;
   background-color: #123;
   color: white;
   border-radius: 3px;
   font-weight: bold;
+  text-decoration: none;
+  text-align: center;
 `;
 
 const SectionSubtitle = styled.p`
