@@ -10,6 +10,7 @@ import {
 import { InlineTextStyleNodes } from "../analysis/findStyles";
 import { Tabs, Tab } from "./Tabs";
 import { ComponentNodeCard, NodeCard, NodeCardGrid } from "./NodeCard";
+import { Index } from "../analysis/indexBuilder";
 
 type ReportProps = {
   fileID: string | null;
@@ -17,6 +18,7 @@ type ReportProps = {
   summary: ComponentSummary | null;
   imageData: ImageData;
   inlineTextStyleNodes: InlineTextStyleNodes | null;
+  index: Index;
 };
 
 type SectionProps = {
@@ -24,6 +26,7 @@ type SectionProps = {
   components: Array<ComponentWithStats>;
   imageData: ImageData;
   sort: Sorts;
+  index: Index;
 };
 
 type Tabs = "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT" | "INLINE_STYLES";
@@ -34,7 +37,8 @@ function Report({
   fileData,
   summary,
   imageData,
-  inlineTextStyleNodes
+  inlineTextStyleNodes,
+  index
 }: ReportProps) {
   const [currentTab, setCurrentTab] = useState<Tabs>("LIBRARY");
   const [currentSort, setCurrentSort] = useState<Sorts>("USAGE");
@@ -96,6 +100,7 @@ function Report({
           components={summary.LIBRARY}
           imageData={imageData}
           sort={currentSort}
+          index={index}
         />
       )}
       {currentTab === "DOCUMENT" && (
@@ -104,6 +109,7 @@ function Report({
           components={summary.DOCUMENT}
           imageData={imageData}
           sort={currentSort}
+          index={index}
         />
       )}
       {currentTab === "DELETED_FROM_DOCUMENT" && (
@@ -112,6 +118,7 @@ function Report({
           components={summary.DELETED_FROM_DOCUMENT}
           imageData={imageData}
           sort={currentSort}
+          index={index}
         />
       )}
       {currentTab === "INLINE_STYLES" && (
@@ -145,7 +152,13 @@ const sorters = {
     a.name.localeCompare(b.name)
 };
 
-function Section({ subtitle, components, imageData, sort }: SectionProps) {
+function Section({
+  subtitle,
+  components,
+  imageData,
+  sort,
+  index
+}: SectionProps) {
   const count = components.length;
   const sorted = components.slice(0).sort(sorters[sort]);
   return (
@@ -158,6 +171,7 @@ function Section({ subtitle, components, imageData, sort }: SectionProps) {
                 key={component.id}
                 component={component}
                 imageData={imageData}
+                index={index}
               />
             ))
           : "None."}

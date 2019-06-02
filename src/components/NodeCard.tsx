@@ -3,16 +3,21 @@ import styled, { css } from "styled-components";
 import componentIcon from "../icons/ComponentIcon.svg";
 import pageIcon from "../icons/PageIcon.svg";
 import textIcon from "../icons/TextIcon.svg";
-import { Path } from "../analysis/query";
-import { ComponentWithStats } from "../analysis/componentSummary";
+import {
+  ComponentWithStats,
+  MaybeNodePath
+} from "../analysis/componentSummary";
 import { ImageData } from "../api";
 import { Count } from "./Count";
 import { NodeWithXRayData } from "../analysis/findStyles";
 import { lightGrey, figmaComponentPurple } from "../styles";
+import { Instance } from "figma-js";
+import { Index } from "../analysis/indexBuilder";
 
 export type ComponentProps = {
   component: ComponentWithStats;
   imageData: ImageData;
+  index: Index;
 };
 
 export type NodeCardProps = {
@@ -35,7 +40,11 @@ export function NodeCard({ imageData, node }: NodeCardProps) {
   );
 }
 
-export function ComponentNodeCard({ component, imageData }: ComponentProps) {
+export function ComponentNodeCard({
+  component,
+  imageData,
+  index
+}: ComponentProps) {
   const [expandInstances, setExpandInstances] = useState<boolean>(false);
   return (
     <NodeCardContainer>
@@ -58,7 +67,7 @@ export function ComponentNodeCard({ component, imageData }: ComponentProps) {
           : "instances..."}
       </NodeCardInstanceCount>
       {expandInstances ? (
-        <InstanceList instances={component.instances} />
+        <InstanceList instances={component.instances} index={index} />
       ) : null}
     </NodeCardContainer>
   );
@@ -88,25 +97,26 @@ function MaybeImage({
 }
 
 function InstanceList({
-  instances
+  instances,
+  index
 }: {
-  instances: Array<{
-    path: Path;
-  }>;
+  instances: Array<Instance>;
+  index: Index;
 }) {
   return (
     <InstanceListContainer>
       {instances.map((ins, i) => (
-        <PathDisplay key={i} path={ins.path} />
+        <PathDisplay key={i} path={index.paths[ins.id]} />
       ))}
     </InstanceListContainer>
   );
 }
 
-function PathDisplay({ path }: { path: Path }) {
+function PathDisplay({ path }: { path: MaybeNodePath }) {
   return path ? (
     <div>
-      <img src={pageIcon} alt="Figma Page Icon" /> {path.join(" ▸ ")}
+      <img src={pageIcon} alt="Figma Page Icon" />{" "}
+      {path.map(node => node.name).join(" ▸ ")}
     </div>
   ) : null;
 }

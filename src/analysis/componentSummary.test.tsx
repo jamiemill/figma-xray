@@ -1,76 +1,26 @@
 import simpleDocument from "../sample-data/simpleDocument";
 import { componentSummary } from "./componentSummary";
+import { buildIndex } from "./indexBuilder";
 
 it("can produce a summary", () => {
-  const result = componentSummary(simpleDocument);
-  const expected = {
-    LIBRARY: [],
-    DOCUMENT: [
-      {
-        id: "4:4",
-        path: ["Symbols", "Buttons"],
-        name: "Default",
-        type: "DOCUMENT",
-        count: 1,
-        instances: [
-          {
-            path: ["Page 1", "Frame A"]
-          }
-        ]
-      },
-      {
-        id: "14:15",
-        path: ["Symbols", "Buttons"],
-        name: "Secondary",
-        type: "DOCUMENT",
-        count: 2,
-        instances: [
-          {
-            path: ["Page 1", "Frame A"]
-          },
-          {
-            path: ["Page 1", "Frame A"]
-          }
-        ]
-      },
-      {
-        id: "17:3",
-        path: ["Symbols", "Buttons"],
-        name: "Secondary",
-        type: "DOCUMENT",
-        count: 0,
-        instances: []
-      },
-      {
-        id: "17:6",
-        path: ["Symbols", "Buttons"],
-        name: "Feint Button",
-        type: "DOCUMENT",
-        count: 0,
-        instances: []
-      },
-      {
-        id: "28:2",
-        path: ["Symbols", "Misc"],
-        name: "OnlyUsedInAnotherComponent",
-        type: "DOCUMENT",
-        count: 1,
-        instances: [
-          {
-            path: ["Symbols", "Cards", "Card"]
-          }
-        ]
-      },
-      {
-        id: "15:9",
-        path: ["Symbols", "Cards"],
-        name: "Card",
-        type: "DOCUMENT",
-        count: 0,
-        instances: []
-      }
-    ],
-    DELETED_FROM_DOCUMENT: []
-  };
-  expect(result).toEqual(expected);
+  const index = buildIndex(simpleDocument);
+  const result = componentSummary(simpleDocument, index);
+
+  expect(result.LIBRARY.length).toEqual(0);
+  expect(result.DOCUMENT.length).toEqual(6);
+  expect(result.DELETED_FROM_DOCUMENT.length).toEqual(0);
+
+  expect(
+    result.DOCUMENT.map(component => ({
+      name: component.name,
+      count: component.count
+    }))
+  ).toEqual([
+    { name: "Default", count: 1 },
+    { name: "Secondary", count: 2 },
+    { name: "Secondary", count: 0 },
+    { name: "Feint Button", count: 0 },
+    { name: "OnlyUsedInAnotherComponent", count: 1 },
+    { name: "Card", count: 0 }
+  ]);
 });

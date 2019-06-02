@@ -3,6 +3,7 @@ import findStyles, {
   FoundStyles,
   findTextNodesWithInlineStyles
 } from "./findStyles";
+import { buildIndex } from "./indexBuilder";
 
 it("finds styles", () => {
   const styles = findStyles(simpleDocument);
@@ -56,7 +57,7 @@ it("finds styles", () => {
 });
 
 it("finds text nodes that use inline styles", () => {
-  const result = findTextNodesWithInlineStyles(simpleDocument);
+  const index = buildIndex(simpleDocument);
+  const result = findTextNodesWithInlineStyles(simpleDocument, index);
   expect(result.length).toEqual(8);
-  // console.log(result);
 });

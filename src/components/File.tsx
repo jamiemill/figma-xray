@@ -5,6 +5,7 @@ import Report from "./Report";
 import { fetchDocument, FileData, ImageData, fetchImages } from "../api";
 import { ComponentSummary } from "../analysis/componentSummary";
 import { InlineTextStyleNodes } from "../analysis/findStyles";
+import { buildIndex, Index } from "../analysis/indexBuilder";
 
 import ComponentSummaryWorker from "../workers/ComponentSummary.worker.ts";
 import InlineTextStyleWorker from "../workers/InlineTextStyle.worker.ts";
@@ -22,6 +23,7 @@ type LoadingStatus =
 
 export default function File({ fileID, personalToken }: FileProps) {
   const [fileData, setFileData] = useState<FileData>(null);
+  const [index, setIndex] = useState<Index | null>(null);
   const [summary, setSummary] = useState<ComponentSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<LoadingStatus>("NONE");
@@ -55,11 +57,16 @@ export default function File({ fileID, personalToken }: FileProps) {
         setLoading("ANALYSING");
         console.time("ANALYSIS");
 
+        console.time("ANALYSIS_BUILD_INDEX");
+        const index = buildIndex(fileData);
+        setIndex(index);
+        console.timeEnd("ANALYSIS_BUILD_INDEX");
+
         console.time("ANALYSIS_COMPONENT_SUMMARY");
         const componentSummaryWorker = new ComponentSummaryWorker();
         const summary = await promiseWork<ComponentSummary>(
           componentSummaryWorker,
-          fileData
+          { fileData, index }
         );
         setSummary(summary);
         componentSummaryWorker.terminate();
@@ -69,7 +76,7 @@ export default function File({ fileID, personalToken }: FileProps) {
         const inlineTextStyleWorker = new InlineTextStyleWorker();
         const inlineTextStyleNodes = await promiseWork<InlineTextStyleNodes>(
           inlineTextStyleWorker,
-          fileData
+          { fileData, index }
         );
         setInlineTextStyleNodes(inlineTextStyleNodes);
         inlineTextStyleWorker.terminate();
@@ -133,13 +140,14 @@ export default function File({ fileID, personalToken }: FileProps) {
           <LoadingStatus loading={loading} error={error} />
         </DocumentNameLabel>
       </DocumentName>
-      {fileData ? (
+      {fileData && index ? (
         <Report
           fileID={fileID}
           fileData={fileData}
           summary={summary}
           imageData={imageData}
           inlineTextStyleNodes={inlineTextStyleNodes}
+          index={index}
         />
       ) : null}
     </div>

@@ -1,6 +1,7 @@
 import { FileResponse, Style, TypeStyle, Paint, Effect, Text } from "figma-js";
 import traverse from "traverse";
-import { Path, getPathOfNodeWithId } from "./query";
+import { Index } from "./indexBuilder";
+import { NodePath } from "./indexBuilder";
 
 type FoundTextStyle = {
   meta: Style;
@@ -88,13 +89,14 @@ export default function findStyles(file: FileResponse): FoundStyles {
 
 export type NodeWithXRayData = {
   node: Text;
-  path: Path;
+  path: NodePath;
 };
 
 export type InlineTextStyleNodes = Array<NodeWithXRayData>;
 
 export function findTextNodesWithInlineStyles(
-  file: FileResponse
+  file: FileResponse,
+  index: Index
 ): InlineTextStyleNodes {
   return traverse(file.document).reduce(function(
     acc: InlineTextStyleNodes,
@@ -109,7 +111,7 @@ export function findTextNodesWithInlineStyles(
       ) {
         acc.push({
           node: node,
-          path: getPathOfNodeWithId(file.document, node.id)
+          path: index.paths[node.id]
         });
       }
     }

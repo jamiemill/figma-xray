@@ -1,37 +1,25 @@
-import { FileResponse, ComponentMetadata } from "figma-js";
-import { findInstancesOfComponent, getPathOfNodeWithId } from "./query";
-import { Path } from "./query";
+import { FileResponse, ComponentMetadata, Instance } from "figma-js";
+
+import { NodePath, Index } from "./indexBuilder";
+
+// Components that come from team library won't have a path.
+export type MaybeNodePath = NodePath | null;
 
 export type ComponentReport = {
   [componentId: string]: {
     count: Number;
-    path: Path;
+    path: NodePath;
     component: ComponentMetadata;
   };
 };
 
-export function componentReportFromComponents(
-  documentResponse: FileResponse
-): ComponentReport {
-  const allComponents = documentResponse.components;
-  let components: ComponentReport = {};
-  Object.keys(allComponents).forEach(id => {
-    components[id] = {
-      component: allComponents[id],
-      count: findInstancesOfComponent(documentResponse.document, id).length,
-      path: getPathOfNodeWithId(documentResponse.document, id)
-    };
-  });
-  return components;
-}
-
 export type ComponentWithStats = {
   id: string;
-  path: Path;
+  path: MaybeNodePath;
   name: string;
   type: "LIBRARY" | "DOCUMENT" | "DELETED_FROM_DOCUMENT";
   count: Number;
-  instances: Array<{ path: Path }>;
+  instances: Array<Instance>;
 };
 
 export type ComponentSummary = {
@@ -41,38 +29,40 @@ export type ComponentSummary = {
 };
 
 export function componentSummary(
-  documentResponse: FileResponse
+  documentResponse: FileResponse,
+  index: Index
 ): ComponentSummary {
-  const components = componentReportFromComponents(documentResponse);
-  const componentIds = Object.keys(components);
-
-  const componentsWithStats: ComponentWithStats[] = componentIds
-    .map(
-      (id: string): ComponentWithStats => ({
-        id: id,
-        path: components[id].path,
-        name: components[id].component.name,
-        type: components[id].component.key
-          ? "LIBRARY"
-          : components[id].path
-          ? "DOCUMENT"
-          : "DELETED_FROM_DOCUMENT",
-        count: components[id].count,
-        instances: findInstancesOfComponent(documentResponse.document, id).map(
-          instance => ({
-            path: getPathOfNodeWithId(documentResponse.document, instance.id)
-          })
-        )
-      })
-    )
-    // ignore library ones with zero usage for now (probably means they are used inside other library components?)
-    .filter(_ => !(_.type === "LIBRARY" && _.count === 0));
-
-  return {
-    LIBRARY: componentsWithStats.filter(_ => _.type === "LIBRARY"),
-    DOCUMENT: componentsWithStats.filter(_ => _.type === "DOCUMENT"),
-    DELETED_FROM_DOCUMENT: componentsWithStats.filter(
-      _ => _.type === "DELETED_FROM_DOCUMENT"
-    )
+  const summary: ComponentSummary = {
+    LIBRARY: [],
+    DOCUMENT: [],
+    DELETED_FROM_DOCUMENT: []
   };
+  const allComponents = documentResponse.components;
+
+  Object.keys(allComponents).forEach((componentId: string) => {
+    const component = allComponents[componentId];
+    const path = componentId in index.paths ? index.paths[componentId] : null;
+    const type = component.key
+      ? "LIBRARY"
+      : path
+      ? "DOCUMENT"
+      : "DELETED_FROM_DOCUMENT";
+    const count = index.instances[componentId].length;
+
+    const componentWithStats: ComponentWithStats = {
+      id: componentId,
+      name: component.name,
+      path: path,
+      type: type,
+      count: count,
+      instances: index.instances[componentId]
+    };
+
+    // Ignore library components that aren't showing any usage. That's because they're just being used inside other components.
+    if (type === "LIBRARY" && count === 0) return;
+
+    summary[type].push(componentWithStats);
+  });
+
+  return summary;
 }
