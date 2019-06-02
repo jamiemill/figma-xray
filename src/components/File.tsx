@@ -32,9 +32,7 @@ export default function File({ fileID, personalToken }: FileProps) {
     inlineTextStyleNodes,
     setInlineTextStyleNodes
   ] = useState<InlineTextStyleNodes | null>(null);
-  const [imageManager] = useState<ImageManager>(
-    () => new ImageManager({ personalToken, fileID })
-  );
+  const [imageManager, setImageManager] = useState<ImageManager | null>(null);
 
   useEffect(() => {
     if (fileData) {
@@ -56,6 +54,8 @@ export default function File({ fileID, personalToken }: FileProps) {
       console.timeEnd("FETCH_DOCUMENT");
 
       if (fileData) {
+        setImageManager(new ImageManager({ personalToken, fileID }));
+
         setLoading("ANALYSING");
         console.time("ANALYSIS");
 
@@ -116,7 +116,7 @@ export default function File({ fileID, personalToken }: FileProps) {
           <LoadingStatus loading={loading} error={error} />
         </DocumentNameLabel>
       </DocumentName>
-      {fileData && index ? (
+      {fileData && index && imageManager ? (
         <Report
           fileID={fileID}
           fileData={fileData}

@@ -27,7 +27,6 @@ export default class ImageManager {
     this.fileID = fileID;
     this.cache = {};
     this.queue = [];
-    console.log("Constructing ImageManager");
 
     this._debouncedProcessQueue = debounce(
       this._processQueue,
