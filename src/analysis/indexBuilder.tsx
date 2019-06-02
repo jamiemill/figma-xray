@@ -1,32 +1,49 @@
-import { FileResponse, Node } from "figma-js";
+import { FileResponse, Node, Instance } from "figma-js";
 import traverse from "traverse";
 
+export type Index = {
+  paths: PathsIndex;
+  instances: InstancesIndex;
+};
+type PathsIndex = { [nodeID: string]: PathElement[] };
+type InstancesIndex = { [componentID: string]: Instance[] };
+
 /**
- * try to build:
+ * Build:
  * - map of nodeId => full path for every interesting node (components, instances, text at the moment - so maybe just everything?)
  * - map of componentId => list of related instance nodes
  */
 
-export function buildIndex(documentResponse: FileResponse) {
-  const index = indexRecursion(documentResponse.document, [], {});
+export function buildIndex(documentResponse: FileResponse): Index {
+  const emptyIndex = {
+    paths: {},
+    instances: {}
+  };
+  const index = indexRecursion(documentResponse.document, emptyIndex, []);
   return index;
 }
 
-type Index = { [nodeID: string]: PathElement[] };
-
 function indexRecursion(
   node: Node,
-  pathMemo: PathElement[],
-  index: Index = {}
+  index: Index,
+  pathMemo: PathElement[]
 ): Index {
-  // Every node we visit gets a top-level entry in the index.
-  index[node.id] = pathMemo;
+  // Every node we visit gets a top-level entry in the paths index.
+  index.paths[node.id] = pathMemo;
+
+  // If it's an instance, add this to the instance index, under its component id.
+  if (node.type === "INSTANCE") {
+    if (!(node.componentId in index.instances)) {
+      index.instances[node.componentId] = [];
+    }
+    index.instances[node.componentId].push(node);
+  }
 
   // if the node has children, add the current node to a temporary path memo,
   // and then recur this function for all children, but with the deeper path memo.
   if ("children" in node) {
     const newPathMemo = pathMemo.concat([generatePathElement(node)]);
-    node.children.forEach(child => indexRecursion(child, newPathMemo, index));
+    node.children.forEach(child => indexRecursion(child, index, newPathMemo));
   }
 
   return index;
