@@ -1,4 +1,5 @@
 import { fetchImages } from "./api";
+import debounce from "debounce";
 
 type QueuedImageRequest = {
   nodeID: string;
@@ -6,14 +7,14 @@ type QueuedImageRequest = {
   reject: (reason: any) => void;
 };
 
-const API_REQUEST_INTERVAL = 1000;
+const DEBOUNCE_QUEUE_PROCESSING = 100;
 
 export default class ImageManager {
   personalToken: string;
   fileID: string;
   cache: { [nodeID: string]: string };
   queue: Array<QueuedImageRequest>;
-  intervalID: number;
+  _debouncedProcessQueue: () => void;
 
   constructor({
     personalToken,
@@ -26,13 +27,12 @@ export default class ImageManager {
     this.fileID = fileID;
     this.cache = {};
     this.queue = [];
-    this.intervalID = setInterval(() => {
-      this._processQueue();
-    }, API_REQUEST_INTERVAL);
-  }
+    console.log("Constructing ImageManager");
 
-  destroy() {
-    clearInterval(this.intervalID);
+    this._debouncedProcessQueue = debounce(
+      this._processQueue,
+      DEBOUNCE_QUEUE_PROCESSING
+    );
   }
 
   async getPreview(nodeID: string) {
@@ -44,15 +44,16 @@ export default class ImageManager {
     return url;
   }
 
-  async _enqueue(nodeID: string) {
+  _enqueue(nodeID: string) {
     const promise = new Promise<string>((resolve, reject) => {
-      this.queue.push({ nodeID, resolve, reject });
+      this.queue.push({
+        nodeID,
+        resolve,
+        reject
+      });
     });
+    this._debouncedProcessQueue();
     return promise;
-  }
-
-  async _fetchImages(nodeIDs: string[]) {
-    return await fetchImages(this.fileID, this.personalToken, nodeIDs);
   }
 
   async _processQueue() {
@@ -72,5 +73,9 @@ export default class ImageManager {
         queuedImageRequest.resolve(url);
       }
     });
+  }
+
+  async _fetchImages(nodeIDs: string[]) {
+    return await fetchImages(this.fileID, this.personalToken, nodeIDs);
   }
 }
