@@ -17,7 +17,7 @@
     "@types/styled-components": "^4.1.14",
     "@types/traverse": "^0.6.32",
     "debounce": "^1.2.0",
-    "figma-js": "file:../figma-js",
+    "figma-js": "1.8.3",
     "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
